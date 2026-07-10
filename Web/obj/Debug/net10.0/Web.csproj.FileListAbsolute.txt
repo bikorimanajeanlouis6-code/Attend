@@ -88,3 +88,5 @@ C:\Users\hp\source\repos\Attend\Web\obj\Debug\net10.0\Web.csproj.AssemblyReferen
 C:\Users\hp\source\repos\Attend\Web\bin\Debug\net10.0\Application.dll
 C:\Users\hp\source\repos\Attend\Web\bin\Debug\net10.0\Application.pdb
 C:\Users\hp\source\repos\Attend\Web\obj\Debug\net10.0\Web.csproj.Up2Date
+C:\Users\hp\source\repos\Attend\Web\bin\Debug\net10.0\Domain.dll
+C:\Users\hp\source\repos\Attend\Web\bin\Debug\net10.0\Domain.pdb
