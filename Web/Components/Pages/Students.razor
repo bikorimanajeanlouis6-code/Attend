@@ -1,4 +1,7 @@
 @page "/student"
+
+@using Core.Application.Services.StudentServices;
+@inject IStudentService StudentService
 <h1>
     Students List
 </h1>
@@ -25,27 +28,13 @@
 }
 
 </table>
-
-
 @code
 {
-    public class Student{
-        public int Id{get;set;}
-        public string Name{get;set;}
-        public DateTime DateofBirth {get;set;}
-        public string Sex {get; set;}
-        public string Email{get;set;}
-        public string Phone{ get;set;}
-
-
-    }
     private List<Student> students = new List<Student>();
+
     protected override void OnInitialized()
     {
-        students= new List<Student>{
-            new Student {Id=1, Email="bikorimana@gmail.com", Name="BIKORIMANA",Phone="07987987987",Sex="male", DateofBirth= new DateTime(2000,1,6)},
-            new Student {Id=2, DateofBirth= new DateTime (2005, 4, 26), Email="bikirimana@gmail.com",Name="BIKORIMANA",Phone="078837578",Sex="MALE"}
-        };
+        students= StudentService.GetAllStudents();
     }
 
 

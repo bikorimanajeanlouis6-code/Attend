@@ -11,6 +11,16 @@
         "buildMultiTargeting": {
           "buildMultiTargeting/Microsoft.AspNetCore.App.Internal.Assets.targets": {}
         }
+      },
+      "Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "compile": {
+          "bin/placeholder/Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Application.dll": {}
+        }
       }
     }
   },
@@ -37,10 +47,16 @@
         "microsoft.aspnetcore.app.internal.assets.10.0.9.nupkg.sha512",
         "microsoft.aspnetcore.app.internal.assets.nuspec"
       ]
+    },
+    "Application/1.0.0": {
+      "type": "project",
+      "path": "../Core/Application/Application.csproj",
+      "msbuildProject": "../Core/Application/Application.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net10.0": [
+      "Application >= 1.0.0",
       "Microsoft.AspNetCore.App.Internal.Assets >= 10.0.9"
     ]
   },
@@ -71,7 +87,11 @@
         "net10.0": {
           "framework": "net10.0",
           "targetAlias": "net10.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\hp\\source\\repos\\Attend\\Core\\Application\\Application.csproj": {
+              "projectPath": "C:\\Users\\hp\\source\\repos\\Attend\\Core\\Application\\Application.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
