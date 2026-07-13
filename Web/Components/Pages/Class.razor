@@ -1,5 +1,8 @@
 @page "/class"
+@using Application.Services.ClassServices
+@using Domain.Entities;
 
+@inject IClassService ClassService
 <h1>
     Class List
 </h1>
@@ -26,20 +29,10 @@
 
 @code
 {
-    public class Classs
-    {
-        public int id{get;set;}
-        public string name{get;set;}
-        public string level{get;set;}
-        public string teacher{get;set;}
-        public string student{get;set;}
-    }
+   
     private List<Classs> classes = new List<Classs>();
         protected override void OnInitialized()
     {
-        classes = new List<Classs>{
-            new Classs {id=1, name="class s1", level="level 1", teacher="joy", student="student 1"},
-            new Classs {id=2, name="class s2", level="level 2", teacher=" richard", student="student 2"}
-        };
+        classes= ClassService.GetAllClasses();
     }
 }

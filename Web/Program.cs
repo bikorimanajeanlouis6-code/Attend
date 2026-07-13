@@ -1,5 +1,7 @@
+using Application.Services.ClassServices;
 using Application.Services.StudentServices;
 using Domain.Entities;
+
 
 using Web.Components;
 
@@ -11,6 +13,7 @@ builder.Services.AddRazorComponents()
 
 //register Service
  builder.Services.AddScoped<IStudentService, StudentService>(); 
+ builder.Services.AddScoped<IClassService,ClassService>();
 
 var app = builder.Build();
 
