@@ -1,9 +1,9 @@
-using Application.Services.ClassServices;
-using Application.Services.StudentServices;
-using Domain.Entities;
-using Infrastructure.Repositories;
-using Web.Components;
 using Application.Interfaces;
+using Application.Services.StudentServices;
+using Web.Components;
+using Infrastructure.Repositories;
+using Infrastructure.DependancyInjection;
+using Application.Services.ClassServices;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,8 +15,7 @@ builder.Services.AddRazorComponents()
 //register Service
  builder.Services.AddScoped<IStudentService, StudentService>(); 
  builder.Services.AddScoped<IClassService,ClassService>();
- builder.Services.AddScoped<IStudent,StudentRepositories>();
-
+ builder.Services.AddInfrastructureService(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
