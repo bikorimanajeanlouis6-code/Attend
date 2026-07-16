@@ -10,5 +10,10 @@ namespace Domain.Entities
       public DateTime GetDateTime{get;set;}
       public String Status {get;set;}
 
+
+      public int Student{get;set;}
+      public int Class{get;set;}
+
+
    }
 }

@@ -17,5 +17,7 @@ namespace Domain.Entities
         public string DateAdded{get;set;}
         public string Status{get;set;}
 
+         public ICollection<Classs> classses {get;set;}
+
     }
 }

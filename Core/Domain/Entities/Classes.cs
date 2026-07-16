@@ -4,11 +4,15 @@ namespace Domain.Entities
     {
         public int Id{get;set;}
         public string Name{get;set;}
-        public string EducationLevelId{get;set;}
-        public string Faculty{get;set;}
-
-
+      
         
+        //Prefic should match the Navigation property name
+        public int FacultyId{get;set;}
+        public int EducationLevelId{get;set;}
+
+         //Nagivation properties
+        public Faculty Faculty{get;set;}
+        public EducationLevel EducationLevel{get;set;}
         
 
     }

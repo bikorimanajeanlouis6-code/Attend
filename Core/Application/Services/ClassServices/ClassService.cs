@@ -1,19 +1,18 @@
+using Application.Interfaces;
 using Domain.Entities;
 namespace Application.Services.ClassServices
 {
-
-    public class ClassService: IClassService
+    public class ClassService:IClassService
     {
+          private readonly IClass _classes;
+         public ClassService(IClass classes)
+        {
+            _classes=classes;
+        }  
          public List<Classs>GetAllClasses()
         {
-            return new List<Classs>
-
-            {
-            new Classs {Id=1, Name="class s1", EducationLevelId=" 1",  Faculty="IT"},
-            new Classs {Id=2, Name="class s2", EducationLevelId=" 2", Faculty=" ICT",} 
-            };
-           
+            return _classes.GetAllClasses();
         }
-        
+   
     }
 }
