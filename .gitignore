@@ -7,6 +7,7 @@
 [Oo]ut/
 [Oo]utput/
 
+
 # .NET / NuGet
 *.user
 *.suo
@@ -34,3 +35,4 @@ project.lock.json
 Thumbs.db
 Desktop.ini
 .DS_Store
+(Mn)igrations/

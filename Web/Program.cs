@@ -3,6 +3,8 @@ using Application.Services.StudentServices;
 using Web.Components;
 using Infrastructure.Repositories;
 using Infrastructure.DependancyInjection;
+using Application.DependenceInjection;
+
 using Application.Services.ClassServices;
 
 
@@ -13,10 +15,13 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 //register Service
- builder.Services.AddScoped<IStudentService, StudentService>(); 
- builder.Services.AddScoped<IClassService,ClassService>();
  builder.Services.AddInfrastructureService(builder.Configuration);
 var app = builder.Build();
+
+
+builder.Services.AddApplicationServices();
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

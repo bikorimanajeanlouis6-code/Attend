@@ -10,18 +10,16 @@
     <tr>
         <th>Class ID</th>
         <th>Class Name</th>
-        <th>Class Level</th>
-        <th>Class teacher</th>
-        <th>Class student</th>
+        <th>Class EducationLevel</th>
+        <th>Class Faculty</th>
     </tr>
 
 @foreach(var cls in classes){
     <tr>
-        <td>@cls.id</td>
-        <td>@cls.name</td>
-        <td>@cls.level</td>
-        <td>@cls.teacher</td>
-        <td>@cls.student</td>
+        <td>@cls.Id</td>
+        <td>@cls.Name</td>
+        <td>@cls.EducationLevelId</td>
+        <td>@cls.Faculty</td>
     </tr>
 
 }

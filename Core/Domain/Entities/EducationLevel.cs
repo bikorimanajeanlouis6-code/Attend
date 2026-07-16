@@ -1,15 +1,9 @@
 namespace Domain.Entities
 {
-    public class Classs
-    {
+    public class EducationLevel{
         public int Id{get;set;}
         public string Name{get;set;}
-        public string EducationLevelId{get;set;}
-        public string Faculty{get;set;}
-
-
         
         
-
     }
 }

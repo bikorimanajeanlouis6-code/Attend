@@ -9,8 +9,8 @@ namespace Application.Services.ClassServices
             return new List<Classs>
 
             {
-                new Classs {id=1, name="class s1", level="level 1", teacher="joy", student="student 1"},
-            new Classs {id=2, name="class s2", level="level 2", teacher=" richard", student="student 2"} 
+            new Classs {Id=1, Name="class s1", EducationLevelId=" 1",  Faculty="IT"},
+            new Classs {Id=2, Name="class s2", EducationLevelId=" 2", Faculty=" ICT",} 
             };
            
         }
