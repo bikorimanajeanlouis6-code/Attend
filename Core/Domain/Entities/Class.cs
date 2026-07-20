@@ -13,6 +13,10 @@ namespace Domain.Entities
          //Nagivation properties
         public Faculty Faculty{get;set;}
         public EducationLevel EducationLevel{get;set;}
+
+         
+
+
         
 
     }

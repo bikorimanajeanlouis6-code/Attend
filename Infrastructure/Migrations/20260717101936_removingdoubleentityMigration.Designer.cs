@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260717101936_removingdoubleentityMigration")]
+    partial class removingdoubleentityMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,36 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("AttendanceStudent", b =>
+                {
+                    b.Property<int>("AttendancesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AttendancesId", "StudentsId");
+
+                    b.HasIndex("StudentsId");
+
+                    b.ToTable("AttendanceStudent");
+                });
+
+            modelBuilder.Entity("ClasssStudent", b =>
+                {
+                    b.Property<int>("ClasssesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ClasssesId", "StudentsId");
+
+                    b.HasIndex("StudentsId");
+
+                    b.ToTable("ClasssStudent");
+                });
 
             modelBuilder.Entity("Domain.Entities.Attendance", b =>
                 {
@@ -144,8 +177,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("DateAdded")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateofBirth")
                         .HasColumnType("datetime2");
@@ -226,11 +260,39 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AttendanceId");
-
                     b.HasIndex("StudentId");
 
                     b.ToTable("StudentAttendances");
+                });
+
+            modelBuilder.Entity("AttendanceStudent", b =>
+                {
+                    b.HasOne("Domain.Entities.Attendance", null)
+                        .WithMany()
+                        .HasForeignKey("AttendancesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Student", null)
+                        .WithMany()
+                        .HasForeignKey("StudentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ClasssStudent", b =>
+                {
+                    b.HasOne("Domain.Entities.Classs", null)
+                        .WithMany()
+                        .HasForeignKey("ClasssesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Student", null)
+                        .WithMany()
+                        .HasForeignKey("StudentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Attendance", b =>
@@ -272,12 +334,6 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.StudentAttendance", b =>
                 {
-                    b.HasOne("Domain.Entities.Attendance", "attendance")
-                        .WithMany()
-                        .HasForeignKey("AttendanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.Student", "Students")
                         .WithMany()
                         .HasForeignKey("StudentId")
@@ -285,8 +341,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Students");
-
-                    b.Navigation("attendance");
                 });
 
             modelBuilder.Entity("Domain.Entities.ClassStudent", b =>

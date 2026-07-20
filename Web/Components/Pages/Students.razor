@@ -1,12 +1,13 @@
-@page "/student"
+@page "/students"
 
 @using Application.Services.StudentServices
 @using Domain.Entities;
 @inject IStudentService StudentService
 <h1>
-    Students List
+    Students 
+    <a class="btn btn-primary" href="/students/add">Add Student</a>
 </h1>
-<table>
+<table class="table">
  <tr>
 
     <th>ID</th>
@@ -15,6 +16,14 @@
     <th>sex</th>
     <th>email</th>
     <th>phone</th>
+    <th>address</th>
+    <th>FatherName</th>
+    <th>MatherName</th>
+    <th>FatherPhone</th>
+    <th>MatherPhone</th>
+    <th>UserAdded</th>
+    <th>DateAdded</th>
+    <th>Status</th>
 
 </tr>
 @foreach(var student in students){
@@ -25,14 +34,14 @@
         <td>@student.Sex</td>
         <td>@student.Email</td>
         <td>@student.Phone</td>
-        <th>@student.Address</th>
-        <th>@student.FatherName</th>
-        <th>@student.MatherName</th>
-        <th>@student.FatherPhoneNmuber</th>
-        <th>@student.MatherPhoneNumber</th>
-        <th>@student.UserAdded</th>
-        <th>@student.DateAdded</th>
-        <th>@student.Status</th>
+        <td>@student.Address</td>
+        <td>@student.FatherName</td>
+        <td>@student.MatherName</td>
+        <td>@student.FatherPhoneNmuber</td>
+        <td>@student.MatherPhoneNumber</td>
+        <td>@student.UserAdded</td>
+        <td>@student.DateAdded</td>
+        <td>@student.Status</td>
 
 
      

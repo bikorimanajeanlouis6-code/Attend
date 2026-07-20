@@ -1,0 +1,88 @@
+@using Application.Services.StudentServices
+@using Domain.Entities
+@using Infrastructure.Migrations
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+@inject IStudentService StudentService
+
+@page "/students/add"
+<div>
+
+     <EditForm Model="student" OnValidSubmit="SaveStudent" >
+    <h1>Add New Student</h1>
+    <div class="form-group">
+        <label for="name">Name</label>
+         <InputText class="form-control" id="name" @bind-Value="student.Name" />
+    </div>
+    <div class="form-group">
+        <label for="Dob">Date of Birth</label>
+        <InputDate class="form-control" id="Dob" @bind-Value="student.DateofBirth" />
+    </div>
+    <div class="form-group">
+        <label for ="sex">sex</label>
+        <InputSelect id="sex" class="form-control" @bind-Value="student.Sex">
+               <option value="">Select Sex</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </InputSelect>
+    
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <InputText class="form-control" id="email" @bind-Value="student.Email" />
+    </div>
+    <div class="form-group">
+        <label for="phone">Phone</label>
+        <InputText class="form-control" id="phone" @bind-Value="student.Phone" />
+    </div>
+    <div class="form-group">
+        <label for="address">Address</label>
+        <InputText class="form-control" id="address" @bind-Value="student.Address" />
+    </div>
+    <div class="form-group">
+        <label for="fatherName">Father's Name</label>
+        <InputText class="form-control" id="fatherName" @bind-Value="student.FatherName" />
+    </div>
+    <div class="form-group">
+        <label for="motherName">Mother's Name</label>
+        <InputText class="form-control" id="motherName" @bind-Value="student.MatherName" />
+    </div>
+    <div class="form-group">
+        <label for="fatherPhone">Father's Phone</label>
+        <InputText class="form-control" id="fatherPhone" @bind-Value="student.FatherPhoneNmuber" />
+    </div>
+    <div class="form-group">
+        <label for="motherPhone">Mother's Phone</label>
+        <InputText class="form-control" id="motherPhone" @bind-Value="student.MatherPhoneNumber" />
+    </div>
+    <div class="form-group">
+        <label for="userAdded">User Added</label>
+        <InputText class="form-control" id="userAdded" @bind-Value="student.UserAdded" />
+    </div>
+    <div class="form-group">
+        <label for="dateAdded">Date Added</label>
+        <InputDate class="form-control" id="dateAdded" @bind-Value="student.DateAdded" />
+    </div>
+    <div class="form-group">
+        <label for="status">Status</label>
+        <InputText class="form-control" id="status" @bind-Value="student.Status" />
+    </div>
+    <div class="form-group">
+        <label for="RegNumber">RegNumber</label>
+        <InputText class="form-control" id="RegNumber" @bind-Value="student.RegNumber" />
+
+    </div>
+        <button type="submit" class="btn btn-primary mt-3">Add Student</button>
+    </EditForm>
+
+</div>
+
+
+@code{
+    private Student student = new ();
+    private void SaveStudent()
+    {
+        StudentService.AddStudent(student);
+        Navigation.NavigateTo("/students");
+    }
+}

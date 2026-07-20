@@ -17,7 +17,7 @@ namespace Infrastructure.DependancyInjection
             );
 
             services.AddScoped<IStudent, StudentRepository>();
-            // services.AddScoped<IClass, ClassRepostories>();
+            services.AddScoped<IClass, ClassRepository>();
             return services;
         }
     }

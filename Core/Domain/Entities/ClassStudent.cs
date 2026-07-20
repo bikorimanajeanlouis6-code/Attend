@@ -4,13 +4,12 @@ namespace Domain.Entities
         public int Id{get;set;}
         
         public int StudentId{get;set;}
+        public Student Student{get;set;}
 
+         
 
-    
-
-        public int Student{get;set;}
-
-         public ICollection<Student> Students {get;set;}
+          public ICollection<Attendance> Attendances {get;set;}
+         
          
     }
 }

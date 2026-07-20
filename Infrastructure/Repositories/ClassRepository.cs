@@ -17,4 +17,9 @@ namespace Infrastructure.Repositories
             return _dbcontext.Classses.ToList();
            
         }
+        public void AddClass(Classs classs)
+        {
+                _dbcontext.Classses.Add(classs);
+                _dbcontext.SaveChanges();
+        }
 }    }

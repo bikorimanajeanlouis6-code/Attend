@@ -13,6 +13,9 @@ namespace Application.Services.ClassServices
         {
             return _classes.GetAllClasses();
         }
-   
+        public void AddClass(Classs classs)
+        {
+            _classes.AddClass(classs);
+        }
     }
 }

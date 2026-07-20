@@ -14,10 +14,12 @@ namespace Domain.Entities
         public string FatherPhoneNmuber{get;set;}
         public string MatherPhoneNumber{get;set;}
         public string UserAdded{get;set;}
-        public string DateAdded{get;set;}
+        public DateTime DateAdded{get;set;}
         public string Status{get;set;}
 
-         public ICollection<Classs> classses {get;set;}
+                
 
+
+         
     }
 }

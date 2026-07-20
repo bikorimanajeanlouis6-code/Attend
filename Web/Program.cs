@@ -16,10 +16,10 @@ builder.Services.AddRazorComponents()
 
 //register Service
  builder.Services.AddInfrastructureService(builder.Configuration);
+ builder.Services.AddApplicationServices();
 var app = builder.Build();
 
 
-builder.Services.AddApplicationServices();
 
 
 
