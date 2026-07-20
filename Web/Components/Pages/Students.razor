@@ -24,7 +24,7 @@
     <th>UserAdded</th>
     <th>DateAdded</th>
     <th>Status</th>
-
+  <th>Details</th>
 </tr>
 @foreach(var student in students){
     <tr>
@@ -42,6 +42,8 @@
         <td>@student.UserAdded</td>
         <td>@student.DateAdded</td>
         <td>@student.Status</td>
+        
+        <td><a href="/students/@student.Id" class="btn btn-primary" >View Details</a></td>
 
 
      
