@@ -1,0 +1,37 @@
+@page "/students/delete/{id:int}"
+@using Domain.Entities
+@using Application.Services.StudentServices
+@rendermode InteractiveServer
+@using Application.DTOs
+@inject NavigationManager Navigation
+@inject IStudentService StudentService
+<div>
+    <EditForm OnValidSubmit="RemoveStudent" Model="student">
+       <div  class="form-group">
+            <label>are you sure your want to Delete</label>
+
+        </div> 
+        <button type="submit" class="btn btn-primary">Delete</button> 
+    </EditForm>
+</div>
+
+@code{
+    [Parameter]
+    public int Id{get;set;}
+    private GetStudentDTO? existingstudent;
+    private DeleteStudentDTO student = new DeleteStudentDTO();
+    protected override void OnParametersSet()
+    {
+        existingstudent= StudentService.GetStudentById(Id);
+        if (existingstudent != null)
+        {
+            student.Id = existingstudent.Id;
+        }
+    }
+    private void RemoveStudent()
+    {
+        StudentService.DeleteStudent(student);
+        Navigation.NavigateTo("/students");
+    }
+    
+}

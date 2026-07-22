@@ -2,6 +2,8 @@ using Domain.Entities;
 
 using Application.Interfaces;
 using Infrastructure.Data;
+using Application.DTOs;
+using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories
 {
     public class StudentRepository : IStudent
@@ -12,20 +14,90 @@ namespace Infrastructure.Repositories
               _dbcontext= dbcontext;
            
         }
-        public List<Student> GetAllStudents()
+        public async Task<List<GetStudentDTO>> GetAllStudentsAsync()
         {
-            return _dbcontext.Students.ToList();
+            return await _dbcontext.Students.Select(s=> new GetStudentDTO
+            {
+                Id =s.Id,
+                Name=s.Name,
+                Address=s.Address,
+                Sex=s.Sex,
+                DateofBirth=s.DateofBirth,
+                Email=s.Email,
+                MatherName=s.MatherName,
+                FatherName=s.FatherName,
+                FatherPhoneNmuber=s.FatherPhoneNmuber,
+                RegNumber=s.RegNumber,
+                MatherPhoneNumber=s.MatherPhoneNumber
+
+             }).ToListAsync();
         }
-        public void AddStudent(Student student)
+          async Task AddStudentAsync(AddStudentDTO student)
         {
-             _dbcontext.Students.Add(student);
-             _dbcontext.SaveChanges();
+             _dbcontext.Students.Add(new Student
+             {
+                 Name =student.Name,
+                 DateofBirth=student.DateofBirth,
+                 Sex=student.Sex,
+                 Phone=student.Phone,
+                 RegNumber=student.RegNumber,
+                 MatherName=student.MatherName,
+                 FatherName=student.FatherName,
+                 Address=student.Address,
+                 FatherPhoneNmuber=student.FatherPhoneNmuber,
+                 MatherPhoneNumber=student.MatherPhoneNumber,
+                 UserAdded="Admin",
+                 DateAdded = DateTime.UtcNow,
+                 Status="Active"
+             }  );
+            await _dbcontext.SaveChangesAsync();
         }
-          public Student? GetStudentById(int id)
+         public async Task<GetStudentDTO?> GetStudentByIdAsync(int id)
         {
-            return _dbcontext.Students.FirstOrDefault(tt => tt.Id == id);
+            return await  _dbcontext.Students.Where(s => s.Id == id).Select(s=> new GetStudentDTO
+            {
+                  Id =s.Id,
+                Name=s.Name,
+                Address=s.Address,
+                Sex=s.Sex,
+                DateofBirth=s.DateofBirth,
+                Email=s.Email,
+                MatherName=s.MatherName,
+                FatherName=s.FatherName,
+                FatherPhoneNmuber=s.FatherPhoneNmuber,
+                RegNumber=s.RegNumber,
+                MatherPhoneNumber=s.MatherPhoneNumber
+            }).FirstOrDefaultAsync();
         }
-    
+        public async Task UpdateStudentAsync(UpdateStudentDTO student)
+        {
+             var ExistingStudent = await _dbcontext.Students.FirstOrDefaultAsync(s => s.Id == student.Id);
+             if(ExistingStudent != null)
+            {
+                ExistingStudent.Name = student.Name;
+                ExistingStudent.Sex = student.Sex;
+                ExistingStudent.DateofBirth = student.DateofBirth;
+                ExistingStudent.Address = student.Address;
+                ExistingStudent.Phone = student.Phone;
+                ExistingStudent.RegNumber=student.RegNumber;
+                ExistingStudent.MatherName=student.MatherName;
+                ExistingStudent.FatherName=student.FatherName;
+                ExistingStudent.Email=student.Email;
+                ExistingStudent.FatherPhoneNmuber=student.FatherPhoneNmuber;
+                ExistingStudent.MatherPhoneNumber=student.MatherPhoneNumber;
+
+               await _dbcontext.SaveChangesAsync();
+            }
+        }
+        public void DeleteStudent(DeleteStudentDTO student)
+        {
+            var ExistingStudent = _dbcontext.Students.FirstOrDefault(s => s.Id == student.Id);
+            if(ExistingStudent != null)
+            {
+               
+                 _dbcontext.SaveChanges();
+            }
+        }
     }
 }
 

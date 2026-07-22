@@ -15,7 +15,7 @@ namespace Domain.Entities
         public string MatherPhoneNumber{get;set;}
         public string UserAdded{get;set;}
         public DateTime DateAdded{get;set;}
-        public string Status{get;set;}
+        public string Status{get;set;} = "Active";
 
                 
 

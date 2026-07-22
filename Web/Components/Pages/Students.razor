@@ -1,7 +1,8 @@
 @page "/students"
 
 @using Application.Services.StudentServices
-@using Domain.Entities;
+@using Application.DTOs
+@inject NavigationManager Navigation
 @inject IStudentService StudentService
 <h1>
     Students 
@@ -39,11 +40,13 @@
         <td>@student.MatherName</td>
         <td>@student.FatherPhoneNmuber</td>
         <td>@student.MatherPhoneNumber</td>
+        <td>@student.RegNumber</td>
         <td>@student.UserAdded</td>
         <td>@student.DateAdded</td>
         <td>@student.Status</td>
         
-        <td><a href="/students/@student.Id" class="btn btn-primary" >View Details</a></td>
+        <td><a href="/students/@student.Id" class="btn btn-primary" >View Details</a>
+       </td>
 
 
      
@@ -53,12 +56,13 @@
 </table>
 @code
 {
-    private List<Student> students = new List<Student>();
+     private List<GetStudentDTO> students  = new List<GetStudentDTO>();
 
-    protected override void OnInitialized()
-    {
-        students= StudentService.GetAllStudents();
-    }
+   protected override async Task OnInitializedAsync()
+        {
+            students= await StudentService.GetAllStudentsAsync();
+
+        }
 
 
 }

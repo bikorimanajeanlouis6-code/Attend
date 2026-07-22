@@ -1,0 +1,37 @@
+@page "/classes/delete/{id:int}"
+@using Domain.Entities
+@using Application.Services.ClassServices
+@rendermode InteractiveServer
+@using Application.DTOs
+@inject NavigationManager Navigation
+@inject IClassService ClassService
+<div>
+    <EditForm OnValidSubmit="RemoveClass" Model="classs">
+       <div  class="form-group">
+            <label>are you sure your want to Delete</label>
+          
+        </div> 
+        <button type="submit" class="btn btn-primary">Delete</button> 
+    </EditForm>
+</div>
+
+@code{
+    [Parameter]
+    public int Id{get;set;}
+    private GetClassDTO? existingclass;
+    private DeleteClassDTO classs = new DeleteClassDTO();
+    protected override void OnParametersSet()
+    {
+        existingclass= ClassService.GetClassById(Id);
+        if (existingclass != null)
+        {
+            classs.Id = existingclass.Id;
+        }
+    }
+    private void RemoveClass()
+    {
+        ClassService.DeleteClass(classs);
+        Navigation.NavigateTo("/classes");
+    }
+    
+}

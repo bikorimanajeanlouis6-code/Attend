@@ -1,6 +1,8 @@
 @page "/students/{id:int}"
-@using Domain.Entities
+@using Application.DTOs
+@rendermode InteractiveServer 
 @using Application.Services.StudentServices
+@inject NavigationManager Navigation
 @inject IStudentService StudentService
 
 <h3 class="form-label" >Student Details </h3>
@@ -74,11 +76,15 @@
         <label>RegNumber</label>
         <small class="form-text">@student.RegNumber</small>
       </div>
+       <a class="btn btn-secondary" href="/students/update/@student.Id">Update</a>
+        <a class="btn btn-primary" href="/students/delete/@student.Id">Delete</a>
+
+
 </div>
 
 @code{
     [Parameter]   public int Id{get;set;}
-    private Student? student;
+    private GetStudentDTO? student;
     protected override void OnParametersSet()
     {
         student = StudentService.GetStudentById(Id);

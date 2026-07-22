@@ -1,32 +1,32 @@
+@page "/students/update/{id:int}"
+@using Application.DTOs
 @using Application.Services.StudentServices
-@using Application.DTOs;
-@using Infrastructure.Migrations
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 @inject IStudentService StudentService
 
-@page "/students/add"
+<h1>Update Student</h1>
 <div>
-<h1>Add New Student</h1>
-     <EditForm Model="student" OnValidSubmit=" SaveStudentAsync">
+    <EditForm Model="student" OnValidSubmit="EditStudentAsync">
     
     <div class="form-group">
         <label >Name</label>
          <InputText class="form-control" @bind-Value="student.Name" />
-</div>
+    </div>
     <div class="form-group">
         <label >Date of Birth</label>
         <InputDate class="form-control"  @bind-Value="student.DateofBirth" />
-    </div>
+    </div>  
     <div class="form-group">
         <label>sex</label>
         <InputSelect  class="form-control" @bind-Value="student.Sex">
                <option value="">Select Sex</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
-            </InputSelect>
-    
+        </InputSelect>
     </div>
+
+
     <div class="form-group">
         <label >Email</label>
         <InputText class="form-control"  @bind-Value="student.Email"/>
@@ -56,34 +56,36 @@
         <label>Mother's Phone</label>
         <InputText class="form-control" @bind-Value="student.MatherPhoneNumber" />
     </div>
-     @* <div class="form-group">
-        <label for="userAdded">User Added</label>
-        <InputText class="form-control" id="userAdded" @bind-Value="student.UserAdded" /> 
-    </div> *@
-    @* <div class="form-group">
-        <label for="dateAdded">Date Added</label>
-        <InputDate class="form-control" id="dateAdded" @bind-Value="student.DateAdded" />
-    </div> *@
-    @* <div class="form-group">
-        <label for="status">Status</label>
-        <InputText class="form-control" id="status" @bind-Value="student.Status" />
-    </div> *@
-    <div class="form-group">
-        <label >RegNumber</label>
-        <InputText class="form-control" @bind-Value="student.RegNumber" />
-
-    </div>
-        <button type="submit" class="btn btn-primary mt-3">Add Student</button>
+    <button type="submit" class="btn btn-primary">Update</button>
     </EditForm>
-
-</div>
-
-
+ </div>   
 @code{
-    private AddStudentDTO student = new ();
-    private async Task SaveStudentAsync()
+    [Parameter]
+    public int Id{get;set;}
+    private GetStudentDTO? existingstudent;
+    private UpdateStudentDTO student = new();
+    protected override async Task OnParametersSetAsync()
     {
-       await StudentService.AddStudentAsync(student);
+        existingstudent=   await StudentService.GetStudentByIdAsync(Id);
+        if (existingstudent != null)
+        {
+            student.Id = existingstudent.Id;
+            student.Name= existingstudent.Name;
+            student.Address= existingstudent.Address;
+            student.Sex=existingstudent.Sex;
+            student.DateofBirth=existingstudent.DateofBirth;
+            student.Email=existingstudent.Email;
+            student.MatherName=existingstudent.MatherName;
+            student.MatherPhoneNumber=existingstudent.MatherPhoneNumber;
+            student.FatherName=existingstudent.FatherName;
+            student.FatherPhoneNmuber=existingstudent.FatherPhoneNmuber;
+            student.RegNumber=existingstudent.RegNumber;
+           }
+    }
+    private async Task EditStudentAsync()
+    {
+       await StudentService.UpdateStudentAsync(student);
         Navigation.NavigateTo("/students");
     }
+
 }

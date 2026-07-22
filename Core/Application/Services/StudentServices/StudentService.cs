@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.DTOs;
 using Domain.Entities;
 namespace Application.Services.StudentServices
 {
@@ -10,17 +11,25 @@ namespace Application.Services.StudentServices
         {
             _student=student;
         }
-        public List<Student>GetAllStudents()
+        public async Task<List<GetStudentDTO>> GetAllStudentsAsync()
         {
-            return _student.GetAllStudents();
+            return await _student.GetAllStudentsAsync();
         }
-        public void AddStudent(Student student)
+        public async Task  AddStudentAsync(AddStudentDTO student)
         {
-            _student.AddStudent(student);
+            await _student.AddStudentAsync(student);
         }
-         public Student? GetStudentById(int id)
+         public async Task <GetStudentDTO?> GetStudentByIdAsync(int id)
         {
-            return _student.GetStudentById(id);
+            return await _student.GetStudentByIdAsync(id);
+        }
+        public async Task  UpdateStudentAsync(UpdateStudentDTO student)
+        {
+            await _student.UpdateStudentAsync(student);
+        }
+        public void DeleteStudent(DeleteStudentDTO student)
+        {
+             _student.DeleteStudent(student);
         }
 
     }

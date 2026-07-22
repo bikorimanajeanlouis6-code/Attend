@@ -1,11 +1,14 @@
 using Domain.Entities;
+using Application.DTOs;
 namespace Application.Services.StudentServices
 {
     public interface IStudentService
     {
-        public List<Student>GetAllStudents();
-        public void AddStudent(Student student);
-        public Student? GetStudentById(int id);
-
+       Task<List<GetStudentDTO>> GetAllStudentsAsync();
+        
+          Task AddStudentAsync(AddStudentDTO student);
+         Task <GetStudentDTO?> GetStudentByIdAsync(int id);
+          Task UpdateStudentAsync (UpdateStudentDTO student);
+         public void DeleteStudent(DeleteStudentDTO student);
     }
 }
