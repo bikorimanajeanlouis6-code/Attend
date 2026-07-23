@@ -7,7 +7,7 @@
 
 
 <div>
-    <EditForm OnValidSubmit="EditClass" Model="classs">
+    <EditForm OnValidSubmit="EditClassAsync" Model="classs">
       
          <div class="form-group">
             <label>Name</label>
@@ -36,9 +36,9 @@
     public int Id{get;set;}
     private GetClassDTO? existingclass;
     private UpdateClassDTO classs = new();
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        existingclass= ClassService.GetClassById(Id);
+        existingclass= await ClassService.GetClassByIdAsync(Id);
         if (existingclass != null)
         {
             classs.Id = existingclass.Id;
@@ -47,9 +47,9 @@
             classs.FacultyId= existingclass.FacultyId;
         }
     }
-    private void EditClass()
+    private async Task EditClassAsync()
     {
-        ClassService.UpdateClass(classs);
+        await ClassService.UpdateClassAsync(classs);
         Navigation.NavigateTo("/classes");
     }
 

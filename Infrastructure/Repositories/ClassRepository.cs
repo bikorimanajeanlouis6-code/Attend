@@ -2,6 +2,7 @@ using Domain.Entities;
 using Application.DTOs;
 using Application.Interfaces;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories
 {
     public class ClassRepository : IClass
@@ -12,9 +13,9 @@ namespace Infrastructure.Repositories
               _dbcontext= dbcontext;
             
     }
-     public List<GetClassDTO> GetAllClasses()
+     public async Task <List<GetClassDTO>> GetAllClassesAsync()
         {
-            return _dbcontext.Classses.Select(s => new GetClassDTO
+            return await _dbcontext.Classses.Select(s => new GetClassDTO
             {
                Id = s.Id, 
                Name=s.Name,
@@ -22,10 +23,10 @@ namespace Infrastructure.Repositories
                EducationLevelId=s.EducationLevelId
 
               })
-              .ToList();
+              .ToListAsync();
            
         }
-        public void AddClass(AddClassDTO classs)
+        public async Task AddClassAsync(AddClassDTO classs)
         {
                 _dbcontext.Classses.Add(new Classs
                 {
@@ -33,22 +34,21 @@ namespace Infrastructure.Repositories
                     FacultyId = classs.FacultyId,
                     EducationLevelId = classs.EducationLevelId
                 });
-                _dbcontext.SaveChanges();
+              await  _dbcontext.SaveChangesAsync();
         }
 
-        public GetClassDTO? GetClassById(int id)
+        public async Task<GetClassDTO?> GetClassByIdAsync(int id)
         {
-            return _dbcontext.Classses.Where (s => s.Id == id).Select(s => new GetClassDTO
-
+            return await _dbcontext.Classses.Where(s => s.Id == id).Select(s => new GetClassDTO
             {
               Id = s.Id,
               Name = s.Name,
               FacultyId = s.FacultyId,
               EducationLevelId = s.EducationLevelId
 
-             }).FirstOrDefault();
+             }).FirstOrDefaultAsync();
         }
-        public void UpdateClass(UpdateClassDTO classs)
+        public async Task UpdateClassAsync(UpdateClassDTO classs)
         {
              var ExistingClass =  _dbcontext.Classses.FirstOrDefault(s => s.Id == classs.Id);
              if(ExistingClass != null)
@@ -56,16 +56,16 @@ namespace Infrastructure.Repositories
                  ExistingClass.Name = classs.Name;
                  ExistingClass.FacultyId = classs.FacultyId;
                  ExistingClass.EducationLevelId = classs.EducationLevelId;
-                 _dbcontext.SaveChanges();
+                 await _dbcontext.SaveChangesAsync();
              }
         }
-        public void DeleteClass(DeleteClassDTO classs)
+        public async Task DeleteClassAsync(DeleteClassDTO classs)
         {
              var ExistingClass =  _dbcontext.Classses.FirstOrDefault(s => s.Id == classs.Id);
              if(ExistingClass != null)
              {
                  _dbcontext.Classses.Remove(ExistingClass);
-                 _dbcontext.SaveChanges();
+                 await _dbcontext.SaveChangesAsync();
              }
         }
     }

@@ -1,0 +1,48 @@
+@page "/students/{id:int}"
+@using Application.DTOs
+@rendermode InteractiveServer 
+@using Application.Services.ClassServices
+@inject NavigationManager Navigation
+@inject IClassService ClassService
+
+<h3 class="form-label" >Class Details </h3>
+<a href="/classes" class="btn btn-secondary">Back to List</a>
+
+<div>
+    <div class="form-group">
+        <label class="form-label" >Id:</label>
+        <small class="form-text" >@Class.Id</small>
+    </div>
+
+      <div class="form-group">
+        <label class="form-label">Name</label>
+            <small class="form-text">@Class.Name</small>
+        
+      </div>
+      <div class="form-group">
+        <label class="form-label">FacultyId </label>
+            <small class="form-text">@Class.FacultyId</small>
+       
+      </div>
+      <div class="form-group">
+        <label class="form-label">EducationLevelId</label>
+            <small class="form-text">@Class.EducationLevelId</small>
+    
+      </div>
+     
+       
+       <a class="btn btn-secondary" href="/classes/update/@Class.Id">Update</a>
+        <a class="btn btn-primary" href="/classes/delete/@Class.Id">Delete</a>
+
+
+</div>
+
+@code{
+    [Parameter]   public int Id{get;set;}
+    private GetClassDTO? Class;
+    protected override async Task OnParametersSetAsync()
+    {
+    Class = await ClassService.GetClassByIdAsync(Id);
+    }
+
+    }

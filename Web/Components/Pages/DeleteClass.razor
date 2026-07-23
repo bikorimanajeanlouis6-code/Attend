@@ -6,7 +6,7 @@
 @inject NavigationManager Navigation
 @inject IClassService ClassService
 <div>
-    <EditForm OnValidSubmit="RemoveClass" Model="classs">
+    <EditForm OnValidSubmit="RemoveClassAsync" Model="classs">
        <div  class="form-group">
             <label>are you sure your want to Delete</label>
           
@@ -20,17 +20,17 @@
     public int Id{get;set;}
     private GetClassDTO? existingclass;
     private DeleteClassDTO classs = new DeleteClassDTO();
-    protected override void OnParametersSet()
+    protected override  async Task OnParametersSetAsync()
     {
-        existingclass= ClassService.GetClassById(Id);
+        existingclass= await ClassService.GetClassByIdAsync(Id);
         if (existingclass != null)
         {
             classs.Id = existingclass.Id;
         }
     }
-    private void RemoveClass()
+    private async Task RemoveClassAsync()
     {
-        ClassService.DeleteClass(classs);
+        await ClassService.DeleteClassAsync(classs);
         Navigation.NavigateTo("/classes");
     }
     

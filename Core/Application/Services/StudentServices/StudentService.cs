@@ -1,6 +1,5 @@
 using Application.Interfaces;
 using Application.DTOs;
-using Domain.Entities;
 namespace Application.Services.StudentServices
 {
     public class StudentService:IStudentService
@@ -27,9 +26,9 @@ namespace Application.Services.StudentServices
         {
             await _student.UpdateStudentAsync(student);
         }
-        public void DeleteStudent(DeleteStudentDTO student)
+        public async Task DeleteStudentAsync(DeleteStudentDTO student)
         {
-             _student.DeleteStudent(student);
+             await _student.DeleteStudentAsync(student);
         }
 
     }

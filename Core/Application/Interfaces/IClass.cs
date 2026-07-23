@@ -4,13 +4,13 @@ namespace Application.Interfaces
 {
     public interface IClass
 {
-    public List<GetClassDTO>GetAllClasses();
+    public Task <List<GetClassDTO>> GetAllClassesAsync();
 
-   public void AddClass(AddClassDTO classs);
+   public Task AddClassAsync(AddClassDTO classs);
 
-  public GetClassDTO? GetClassById(int id);
+  public Task <GetClassDTO?> GetClassByIdAsync(int id);
   
-  public void UpdateClass(UpdateClassDTO student);
-  public void DeleteClass(DeleteClassDTO student);
+  public Task UpdateClassAsync(UpdateClassDTO student);
+  public Task DeleteClassAsync(DeleteClassDTO student);
 }
     }

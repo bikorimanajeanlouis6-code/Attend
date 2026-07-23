@@ -1,5 +1,4 @@
 using Application.Interfaces;
-using Domain.Entities;
 using Application.DTOs;
 namespace Application.Services.ClassServices
 {
@@ -10,25 +9,25 @@ namespace Application.Services.ClassServices
         {
             _classes=classes;
         }  
-         public List<GetClassDTO>GetAllClasses()
+         public async Task<List<GetClassDTO>> GetAllClassesAsync()
         {
-            return _classes.GetAllClasses();
+            return await _classes.GetAllClassesAsync();
         }
-          public GetClassDTO? GetClassById(int id)
+          public async Task<GetClassDTO?> GetClassByIdAsync(int id)
         {
-            return _classes.GetClassById(id);
+            return await _classes.GetClassByIdAsync(id);
         }
-        public void AddClass(AddClassDTO classs)
+        public async Task AddClassAsync(AddClassDTO classs)
         {
-            _classes.AddClass(classs);
+           await _classes.AddClassAsync(classs);
         }
-         public void UpdateClass(UpdateClassDTO classs)
+         public async Task UpdateClassAsync(UpdateClassDTO classs)
         {
-            _classes.UpdateClass(classs);
+            await _classes.UpdateClassAsync(classs);
         }
-        public void DeleteClass(DeleteClassDTO classs)
+        public async Task DeleteClassAsync(DeleteClassDTO classs)
         {
-            _classes.DeleteClass(classs);
+            await _classes.DeleteClassAsync(classs);
         }
     }
 }

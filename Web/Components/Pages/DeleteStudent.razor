@@ -20,17 +20,17 @@
     public int Id{get;set;}
     private GetStudentDTO? existingstudent;
     private DeleteStudentDTO student = new DeleteStudentDTO();
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        existingstudent= StudentService.GetStudentById(Id);
+        existingstudent= await StudentService.GetStudentByIdAsync(Id);
         if (existingstudent != null)
         {
             student.Id = existingstudent.Id;
         }
     }
-    private void RemoveStudent()
+    private async Task RemoveStudent()
     {
-        StudentService.DeleteStudent(student);
+       await StudentService.DeleteStudentAsync(student);
         Navigation.NavigateTo("/students");
     }
     

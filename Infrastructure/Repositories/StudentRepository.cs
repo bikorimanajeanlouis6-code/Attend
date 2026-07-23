@@ -32,7 +32,7 @@ namespace Infrastructure.Repositories
 
              }).ToListAsync();
         }
-          async Task AddStudentAsync(AddStudentDTO student)
+          public async Task AddStudentAsync(AddStudentDTO student)
         {
              _dbcontext.Students.Add(new Student
              {
@@ -89,13 +89,13 @@ namespace Infrastructure.Repositories
                await _dbcontext.SaveChangesAsync();
             }
         }
-        public void DeleteStudent(DeleteStudentDTO student)
+        public async Task DeleteStudentAsync(DeleteStudentDTO student)
         {
-            var ExistingStudent = _dbcontext.Students.FirstOrDefault(s => s.Id == student.Id);
+            var ExistingStudent = await _dbcontext.Students.FirstOrDefaultAsync(s => s.Id == student.Id);
             if(ExistingStudent != null)
             {
                
-                 _dbcontext.SaveChanges();
+                await _dbcontext.SaveChangesAsync();
             }
         }
     }
