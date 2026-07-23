@@ -1,9 +1,17 @@
-@page "/students/{id:int}"
+@page "/class/{id:int}"
 @using Application.DTOs
 @rendermode InteractiveServer 
 @using Application.Services.ClassServices
 @inject NavigationManager Navigation
 @inject IClassService ClassService
+
+@if(isLoading){
+  <small>the page is loading ...</small>
+}
+else if(Class== null){
+<small>No class found</small>
+}
+else{
 
 <h3 class="form-label" >Class Details </h3>
 <a href="/classes" class="btn btn-secondary">Back to List</a>
@@ -35,14 +43,19 @@
         <a class="btn btn-primary" href="/classes/delete/@Class.Id">Delete</a>
 
 
-</div>
+  </div>
+}
 
 @code{
     [Parameter]   public int Id{get;set;}
+    public bool isLoading = true;
     private GetClassDTO? Class;
     protected override async Task OnParametersSetAsync()
     {
+        
+    isLoading = true;
     Class = await ClassService.GetClassByIdAsync(Id);
+    
+    isLoading = false;
     }
-
-    }
+ }

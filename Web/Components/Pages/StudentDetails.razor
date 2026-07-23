@@ -1,93 +1,111 @@
 @page "/students/{id:int}"
 @using Application.DTOs
-@rendermode InteractiveServer 
+@rendermode InteractiveServer
 @using Application.Services.StudentServices
 @inject NavigationManager Navigation
 @inject IStudentService StudentService
 
-<h3 class="form-label" >Student Details </h3>
+@if(isLoading){
+  <small>the page is loading ...</small>
+}
+else if(student== null){
+<small>No student found</small>
+}
+else{
+  
+<h3 class="form-label">Student Details </h3>
 <a href="/students" class="btn btn-secondary">Back to List</a>
 
-<div>
+  <div>
+ 
+
     <div class="form-group">
-        <label class="form-label" >Id:</label>
-        <small class="form-text" >@student.Id</small>
+      <label class="form-label">Id:</label>
+      <small class="form-text">@student.Id</small>
     </div>
     <div class="form-group">
-         <label class="form-label" >Name:</label>
-        <small class="form-text" >@student.Name</small>
-        
+      <label class="form-label">Name:</label>
+      <small class="form-text">@student.Name</small>
+
     </div>
+    <div class="form-group">
+      <label class="form-label">Date of Birth</label>
+      <small class="form-text">@student.DateofBirth</small>
+
+    </div>
+    <div class="form-group">
+      <label class="form-label">sex </label>
+      <small class="form-text">@student.Sex</small>
+
+    </div>
+    <div class="form-group">
+      <label class="form-label">phone</label>
+      <small class="form-text">@student.Phone</small>
+
+    </div>
+    <div class="form-group">
+      <label class="form-label">Address</label>
+      <small class="form-text">@student.Address</small>
+
+    </div>
+    <div class="form-group">
+      <label class="form-label">Father Name</label>
+      <small class="form-text">@student.FatherName</small>
+
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mather Name</label>
+      <small class="form-text">@student.MatherName</small>
+
+    </div>
+    <div class="form-group">
+      <label class="form-label">Father Phone</label>
+      <small class="form-text">@student.FatherPhoneNmuber</small>
       <div class="form-group">
-        <label class="form-label">Date of Birth</label>
-            <small class="form-text">@student.DateofBirth</small>
-        
+        <label>Mather Phone</label>
+        <small class="form-text">@student.MatherPhoneNumber</small>
       </div>
-      <div class="form-group">
-        <label class="form-label">sex </label>
-            <small class="form-text">@student.Sex</small>
-       
-      </div>
-      <div class="form-group">
-        <label class="form-label">phone</label>
-            <small class="form-text">@student.Phone</small>
-    
-      </div>
-      <div class="form-group">
-        <label class="form-label">Address</label>
-            <small class="form-text">@student.Address</small>
-       
-      </div>
-      <div class="form-group">
-        <label class="form-label">Father Name</label>
-            <small class="form-text">@student.FatherName</small>
-       
-      </div>
-      <div class="form-group">
-        <label class="form-label">Mather Name</label>
-            <small class="form-text">@student.MatherName</small>
-       
-      </div>
-      <div class="form-group">
-        <label class="form-label">Father Phone</label>
-            <small class="form-text">@student.FatherPhoneNmuber</small>
-        <div class="form-group">
-            <label>Mather Phone</label>
-            <small class="form-text">@student.MatherPhoneNumber</small>
-        </div>
-      
-      </div>
-      <div class="form-group">
-        <label class="form-label">User Added</label>
-            <small class="form-text">@student.UserAdded</small>
-        
-      </div>
-      <div class="form-group">
-        <label class="form-label">Date Added</label>
-            <small class="form-text">@student.DateAdded</small>
-       
-      </div>
-      <div class="form-group">
-        <label class="form-label">Status</label>
-            <small class="form-text">@student.Status</small>
-       
-      </div>
-      <div class="form-group">
-        <label>RegNumber</label>
-        <small class="form-text">@student.RegNumber</small>
-      </div>
-       <a class="btn btn-secondary" href="/students/update/@student.Id">Update</a>
-        <a class="btn btn-primary" href="/students/delete/@student.Id">Delete</a>
+
+    </div>
+    <div class="form-group">
+      <label class="form-label">User Added</label>
+      <small class="form-text">@student.UserAdded</small>
+
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date Added</label>
+      <small class="form-text">@student.DateAdded</small>
+
+    </div>
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <small class="form-text">@student.Status</small>
+
+    </div>
+    <div class="form-group">
+      <label>RegNumber</label>
+      <small class="form-text">@student.RegNumber</small>
+    </div>
+    <a class="btn btn-secondary" href="/students/update/@student.Id">Update</a>
+    <a class="btn btn-primary" href="/students/delete/@student.Id">Delete</a>
 
 
-</div>
 
-@code{
-    [Parameter]   public int Id{get;set;}
-    private GetStudentDTO? student;
-    protected override async Task OnParametersSetAsync()
-    {
-        student = await StudentService.GetStudentByIdAsync(Id);
-    }
 
-    }
+  </div>
+}
+
+
+@code {
+  [Parameter] 
+  public int Id { get; set; }
+  public bool isLoading = true;
+  private GetStudentDTO? student;
+  protected override async Task OnParametersSetAsync()
+  { 
+    isLoading = true;
+
+    student = await StudentService.GetStudentByIdAsync(Id);
+    isLoading = false;
+  }
+}

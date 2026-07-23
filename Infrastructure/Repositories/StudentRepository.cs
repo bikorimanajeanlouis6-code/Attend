@@ -28,7 +28,10 @@ namespace Infrastructure.Repositories
                 FatherName=s.FatherName,
                 FatherPhoneNmuber=s.FatherPhoneNmuber,
                 RegNumber=s.RegNumber,
-                MatherPhoneNumber=s.MatherPhoneNumber
+                MatherPhoneNumber=s.MatherPhoneNumber,
+                Status=s.Status,
+                DateAdded=s.DateAdded,
+                UserAdded=s.UserAdded
 
              }).ToListAsync();
         }

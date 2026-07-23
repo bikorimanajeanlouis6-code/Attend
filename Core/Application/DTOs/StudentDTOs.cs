@@ -45,7 +45,7 @@ namespace Application.DTOs
         public string FatherPhoneNmuber{get;set;}
         public string MatherPhoneNumber{get;set;}
         public string UserAdded{get;set;}
-        public string DateAdded{get;set;}
+        public DateTime DateAdded{get;set;}
         public string Status{get;set;}
         
     }
