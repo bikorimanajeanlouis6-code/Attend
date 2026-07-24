@@ -5,8 +5,8 @@
 @inject NavigationManager Navigation
 @inject IClassService ClassService
 
-@page "/class/add"
-<div> 
+@* @page "/class/add" *@
+@* <div> 
      <EditForm Model="classs" OnValidSubmit="SaveClass" FormName="AddClass" >
     
       <h1>Add Class</h1>
@@ -28,14 +28,63 @@
              <button type="submit" class="btn btn-primary mt-3">Add Class</button>   
      </EditForm>
    
-</div>
+</div> *@
+
+<MudDialog>
+    <TitleContent>Add Student</TitleContent>
+    <DialogContent>
+        <EditForm Model="classs" OnValidSubmit="SaveClass">
+           <MudGrid>
+            <MudItem xs="12">
+                <MudTextField 
+                @bind-Value="classs.Name"
+                Margin="Margin.Dense"
+                Variant="Variant.Outlined"
+                Label="Name"
+                Placeholder="Fullname">
+                </MudTextField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField 
+                @bind-Value="classs.EducationLevelId"
+                Margin="Margin.Dense"
+                Variant="Variant.Outlined"
+                Placeholder="Education Level">
+                </MudTextField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField 
+                @bind-Value="classs.FacultyId"
+                Margin="Margin.Dense"
+                Variant="Variant.Outlined"
+                Placeholder="Faculty">
+                </MudTextField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudButton 
+                Variant="Variant.Filled"
+                Color="Color.Primary"
+                FullWidth="true" 
+                ButtonType="ButtonType.Submit">
+                SAVE
+                </MudButton>
+            </MudItem>
+
+           </MudGrid> 
+        </EditForm>
+
+    </DialogContent>
+    
+</MudDialog>
   
 
 @code{
+     [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
     private AddClassDTO classs = new ();
     private async Task SaveClass()
     {
         await ClassService.AddClassAsync(classs);
-        Navigation.NavigateTo("/class");
+       MudDialog.Close(DialogResult.Ok(true));
     }
 }

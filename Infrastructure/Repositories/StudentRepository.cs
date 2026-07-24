@@ -47,6 +47,7 @@ namespace Infrastructure.Repositories
                  RegNumber=student.RegNumber,
                  MatherName=student.MatherName,
                  FatherName=student.FatherName,
+                 Email=student.Email,
                  Address=student.Address,
                  FatherPhoneNmuber=student.FatherPhoneNmuber,
                  MatherPhoneNumber=student.MatherPhoneNumber,
@@ -60,7 +61,7 @@ namespace Infrastructure.Repositories
         {
             return await  _dbcontext.Students.Where(s => s.Id == id).Select(s=> new GetStudentDTO
             {
-                  Id =s.Id,
+                 Id =s.Id,
                 Name=s.Name,
                 Address=s.Address,
                 Sex=s.Sex,

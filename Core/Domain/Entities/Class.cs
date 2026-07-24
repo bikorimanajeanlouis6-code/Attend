@@ -14,10 +14,5 @@ namespace Domain.Entities
         public Faculty Faculty{get;set;}
         public EducationLevel EducationLevel{get;set;}
 
-         
-
-
-        
-
     }
 }

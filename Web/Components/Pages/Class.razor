@@ -3,7 +3,7 @@
 @using Application.DTOs
 @rendermode InteractiveServer       
 @inject NavigationManager Navigation
-
+@inject IDialogService DialogService
 @inject IClassService ClassService
 @* <h1>
     Class List
@@ -31,14 +31,12 @@
 }
 </table> *@
 
-
-
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4" >
         <MudDataGrid T="GetClassDTO" MultiSelection="true" Items="@classes" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@_quickFilter"
             Hideable="true" RowClick="@RowClicked" RowContextMenuClick="RowRightClicked" SelectedItemsChanged="@SelectedItemsChanged">
             
             <ToolBarContent>
-                <MudText Typo="Typo.h6">classes</MudText>
+                <MudText Typo="Typo.h6">Classes</MudText>
                 <MudSpacer />
                 <MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="d-none d-md-flex">
                   <MudTextField 
@@ -54,28 +52,20 @@
                   </MudTextField>
                 </MudContainer>
 
-                <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="ml-4">Add Student</MudButton>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="ml-4" @onclick="() => OpenDialogAsync(_closeButton)" >Add Class</MudButton>
             
             </ToolBarContent>
 
             <Columns>
-                <SelectColumn T="GetStudentDTO" />
-                <PropertyColumn Property="x => x.Id" Title="ID" Sortable="true" Filterable="false" />
-                <PropertyColumn Property="x => x.EducationLevelId" Title="EducationLevel" />
-                <PropertyColumn Property="x => x.FacultyId" Title="Faculty" />
-               
-                 @* <PropertyColumn Property="x => x.MatherName" />
-                <PropertyColumn Property="x => x.FatherName" Title="Molar mass" />
-                <PropertyColumn Property="x => x.FatherPhoneNmuber" Title="Category" />
-                 <PropertyColumn Property="x => x.MatherPhoneNumber" />
-                <PropertyColumn Property="x => x.UserAdded" Title="Molar mass" />
-                <PropertyColumn Property="x => x.DateAdded" Title="Category" />
-                <PropertyColumn Property="x => x.Status" Title="Category" /> *@
-
+                <SelectColumn T="GetClassDTO" />
+                <PropertyColumn Property="x => x.Id" Title="Nr" Sortable="true" Filterable="false" />
+                <PropertyColumn Property="x => x.Name" />
+                <PropertyColumn Property="x => x.EducationLevelId" SortBy="@_sortBy" />
+                <PropertyColumn Property="x => x.FacultyId" />
             </Columns>
 
             <PagerContent>
-                <MudDataGridPager T="GetStudentDTO" />
+                <MudDataGridPager T="GetClassDTO" />
             </PagerContent>
 
         </MudDataGrid>
@@ -83,11 +73,12 @@
 
 @code
 {
-     private string _searchString;
+   
+   private string _searchString = string.Empty;
         private bool _sortNameByLength;
         private List<string> _events = new();
 
-              void RowClicked(DataGridRowClickEventArgs<GetClassDTO> args)
+        void RowClicked(DataGridRowClickEventArgs<GetClassDTO> args)
         {
             _events.Insert(0, $"Event = RowClick, Index = {args.RowIndex}, Data = {System.Text.Json.JsonSerializer.Serialize(args.Item)}");
         }
@@ -101,7 +92,9 @@
         {
             _events.Insert(0, $"Event = SelectedItemsChanged, Data = {System.Text.Json.JsonSerializer.Serialize(items)}");
         }
-         private Func<GetClassDTO, object> _sortBy => x =>
+
+
+        private Func<GetClassDTO, object> _sortBy => x =>
         {
             if (_sortNameByLength)
                 return x.Name.Length;
@@ -117,15 +110,30 @@
             if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
 
-           
+            if (x.EducationLevelId.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            if (x.FacultyId.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
 
             return false;
         };
-
-   
     private List<GetClassDTO> classes = new List<GetClassDTO>();
         protected override async Task OnInitializedAsync()
     {
         classes= await ClassService.GetAllClassesAsync();
     }
+
+        private readonly DialogOptions _closeButton = new() { CloseButton = true };
+        private async Task OpenDialogAsync(DialogOptions options)
+        {
+            var dialog = await DialogService.ShowAsync<AddClass>("Add New Class", options);
+                
+            var result = await dialog.Result;
+
+            if (result is not null && !result.Canceled)
+            {
+                 classes= await ClassService.GetAllClassesAsync();
+            }
+        }
 }

@@ -3,6 +3,7 @@
 @using Application.Services.StudentServices
 @using Application.DTOs
 @inject NavigationManager Navigation
+@inject IDialogService DialogService
 @inject IStudentService StudentService
 
 
@@ -27,7 +28,8 @@
                   </MudTextField>
                 </MudContainer>
 
-                <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="ml-4">Add Student</MudButton>
+                
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="ml-4" @onclick="() => OpenDialogAsync(_closeButton)" >Add Student</MudButton>
             
             </ToolBarContent>
 
@@ -107,10 +109,23 @@
         {
             students= await StudentService.GetAllStudentsAsync();
 
+ 
+        }
+        private readonly DialogOptions _closeButton = new() { CloseButton = true };
+        private async Task OpenDialogAsync(DialogOptions options)
+        {
+            var dialog = await DialogService.ShowAsync<AddStudent>("Add New Student", options);
+                
+            var result = await dialog.Result;
+
+            if (result is not null && !result.Canceled)
+            {
+                students = await StudentService.GetAllStudentsAsync();
+            }
         }
 
 
-}
+ }    
 
 
 

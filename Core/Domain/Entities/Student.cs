@@ -11,6 +11,7 @@ namespace Domain.Entities
         public string Address{get;set;}
         public string FatherName{get;set;}
         public string MatherName{get;set;}
+        
         public string FatherPhoneNmuber{get;set;}
         public string MatherPhoneNumber{get;set;}
         public string UserAdded{get;set;}
