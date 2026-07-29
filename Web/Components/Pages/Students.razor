@@ -41,14 +41,11 @@
                 <PropertyColumn Property="x => x.DateofBirth" Title="DateofBirth" />
                 <PropertyColumn Property="x => x.Phone" Title="Phone" />
                 <PropertyColumn Property="x => x.Email" Title="Email" />
-                 @* <PropertyColumn Property="x => x.MatherName" />
-                <PropertyColumn Property="x => x.FatherName" Title="Molar mass" />
-                <PropertyColumn Property="x => x.FatherPhoneNmuber" Title="Category" />
-                 <PropertyColumn Property="x => x.MatherPhoneNumber" />
-                <PropertyColumn Property="x => x.UserAdded" Title="Molar mass" />
-                <PropertyColumn Property="x => x.DateAdded" Title="Category" />
-                <PropertyColumn Property="x => x.Status" Title="Category" /> *@
-
+                <TemplateColumn Title="Actions">
+                     <CellTemplate>
+                        <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" @onclick="() => ViewStudentAsync(context.Item)" />
+                    </CellTemplate>
+                </TemplateColumn>
             </Columns>
 
             <PagerContent>
@@ -123,6 +120,16 @@
                 students = await StudentService.GetAllStudentsAsync();
             }
         }
+
+         private async Task ViewStudentAsync(GetStudentDTO student)
+            {
+                var parameters = new DialogParameters
+                {
+                    { nameof(StudentDetailDialog.Id), student.Id } // Pass the Id directly
+                };
+
+                    var dialog = await DialogService.ShowAsync<StudentDetailDialog>("Student Details", parameters);
+            }
 
 
  }    

@@ -3,6 +3,7 @@ using Application.Services.StudentServices;
 using Web.Components;
 using Infrastructure.Repositories;
 using Infrastructure.DependancyInjection;
+using Application.Services.AttendanceServices;
 using Application.DependenceInjection;
 using MudBlazor.Services;
 

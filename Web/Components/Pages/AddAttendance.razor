@@ -1,0 +1,73 @@
+@using Application.DTOs
+@using Application.Services.AttendanceServices
+@using Infrastructure.Migrations
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+@inject IAttendanceService AttendanceService
+
+<MudDialog>
+    <TitleContent>Add Attendance</TitleContent>
+    <DialogContent>
+        <EditForm Model="Attendance" OnValidSubmit="SaveAttendance">
+           <MudGrid>
+            <MudItem xs="12">
+                <MudTextField 
+                @bind-Value="Attendance.Name"
+                Margin="Margin.Dense"
+                Variant="Variant.Outlined"
+                Label="Name"
+                Placeholder="Fullname">
+                </MudTextField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField 
+                @bind-Value="Attendance.ClassId"
+                Margin="Margin.Dense"
+                Variant="Variant.Outlined"
+                Placeholder="ClassId">
+                </MudTextField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField 
+                @bind-Value="Attendance.Date"
+                Margin="Margin.Dense"
+                Variant="Variant.Outlined"
+                Placeholder="Faculty">
+                </MudTextField>
+            </MudItem>
+             <MudItem xs="12">
+               <MudTextField 
+                @bind-Value="Attendance.Status"
+                Margin="Margin.Dense"
+                Variant="Variant.Outlined"
+                Placeholder="Status">
+                </MudTextField>
+            </MudItem>
+            <MudItem xs="12">
+                <MudButton 
+                Variant="Variant.Filled"
+                Color="Color.Primary"
+                FullWidth="true" 
+                ButtonType="ButtonType.Submit">
+                SAVE
+                </MudButton>
+            </MudItem>
+
+           </MudGrid> 
+        </EditForm>
+
+    </DialogContent>
+    
+</MudDialog>
+
+
+@code{
+     [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+    private AddAttendanceDTO Attendance = new ();
+    private async Task SaveAttendance()
+    {
+        await AttendanceService.AddAttendanceAsync(Attendance);
+       MudDialog.Close(DialogResult.Ok(true));
+    }
+}

@@ -6,7 +6,7 @@ namespace Domain.Entities
         public int StudentId{get;set;}
         public int AttendanceId{get;set;}
         public string Name{get;set;}
-        public DateTime GetDateTime{get;set;}
+        public DateTime Time{get;set;}
         public string Status{get;set;}
 
         

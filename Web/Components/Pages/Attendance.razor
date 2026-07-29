@@ -1,0 +1,119 @@
+@page "/Attendance"
+@using Application.Services.AttendanceServices
+@using Application.DTOs
+@rendermode InteractiveServer       
+@inject NavigationManager Navigation
+@inject IDialogService DialogService
+@inject IAttendanceService AttendanceService
+
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" class="mt-4" >
+        <MudDataGrid T="GetAttendanceDTO" MultiSelection="true" Items="@Attendances" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@_quickFilter"
+            Hideable="true" RowClick="@RowClicked" RowContextMenuClick="RowRightClicked" SelectedItemsChanged="@SelectedItemsChanged">
+            
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Attendance</MudText>
+                <MudSpacer />
+                <MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="d-none d-md-flex">
+                  <MudTextField 
+                    @bind-Value="_searchString" 
+                    Placeholder="Search" 
+                    Adornment="Adornment.Start" 
+                    Immediate="true"
+                    AdornmentIcon="@Icons.Material.Filled.Search" 
+                    IconSize="Size.Medium" 
+                    Variant="Variant.Outlined"
+                    Margin="Margin.Dense"
+                    Class="mt-1 w-100">
+                  </MudTextField>
+                </MudContainer>
+
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="ml-4" @onclick="() => OpenDialogAsync(_closeButton)" >Add Attendance</MudButton>
+            
+            </ToolBarContent>
+
+            <Columns>
+                <SelectColumn T="GetAttendanceDTO" />
+                <PropertyColumn Property="x => x.Id" Title="Nr" Sortable="true" Filterable="false" />
+                <PropertyColumn Property="x => x.Name" />
+                <PropertyColumn Property="x => x.ClassId" SortBy="@_sortBy" />
+                <PropertyColumn Property="x => x.Date" />
+                 <PropertyColumn Property="x => x.Status" />
+                
+            </Columns>
+
+            <PagerContent>
+                <MudDataGridPager T="GetAttendanceDTO" />
+            </PagerContent>
+
+        </MudDataGrid>
+</MudContainer>
+
+@code
+{
+   
+   private string _searchString = string.Empty;
+        private bool _sortNameByLength;
+        private List<string> _events = new();
+
+        void RowClicked(DataGridRowClickEventArgs<GetAttendanceDTO> args)
+        {
+            _events.Insert(0, $"Event = RowClick, Index = {args.RowIndex}, Data = {System.Text.Json.JsonSerializer.Serialize(args.Item)}");
+        }
+        
+        void RowRightClicked(DataGridRowClickEventArgs<GetAttendanceDTO> args)
+        {
+            _events.Insert(0, $"Event = RowRightClick, Index = {args.RowIndex}, Data = {System.Text.Json.JsonSerializer.Serialize(args.Item)}");
+        }
+
+        void SelectedItemsChanged(HashSet<GetAttendanceDTO> items)
+        {
+            _events.Insert(0, $"Event = SelectedItemsChanged, Data = {System.Text.Json.JsonSerializer.Serialize(items)}");
+        }
+
+        private Func<GetAttendanceDTO, object> _sortBy => x =>
+        {
+            if (_sortNameByLength)
+                return x.Name.Length;
+            else
+                return x.Name;
+        };
+        // quick filter - filter globally across multiple columns with the same input
+        private Func<GetAttendanceDTO, bool> _quickFilter => x =>
+        {
+            if (string.IsNullOrWhiteSpace(_searchString))
+                return true;
+
+            if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            if (x.ClassId.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            if (x.Date.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+                
+            if (x.Status.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            return false;
+        };
+    private List<GetAttendanceDTO> Attendances = new List<GetAttendanceDTO>();
+        protected override async Task OnInitializedAsync()
+    {
+        Attendances= await AttendanceService.GetAllAttendanceAsync();
+    }
+
+        private readonly DialogOptions _closeButton = new() { CloseButton = true };
+        private async Task OpenDialogAsync(DialogOptions options)
+        {
+            var dialog = await DialogService.ShowAsync<AddAttendance>("Add New Attendance", options);
+                
+            var result = await dialog.Result;
+
+            if (result is not null && !result.Canceled)
+            {
+                 Attendances= await AttendanceService.GetAllAttendanceAsync();
+            }
+        }
+}
