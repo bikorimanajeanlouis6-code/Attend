@@ -1,0 +1,124 @@
+@page "/Class_Student"
+@using Application.Services.ClassStudentServices
+@using Application.DTOs;
+@using Domain.Entities;
+
+@inject IDialogService DialogService
+@inject IClassStudentService ClassStudentService
+
+
+ <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4" >
+        <MudDataGrid T="GetClassStudentDTO" MultiSelection="true" Items="@classstudents" SortMode="SortMode.Multiple" Filterable="true" 
+            Hideable="true" RowClick="@RowClicked" RowContextMenuClick="RowRightClicked" SelectedItemsChanged="@SelectedItemsChanged">
+            
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Class_Student</MudText>
+                <MudSpacer />
+                <MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="d-none d-md-flex">
+                  <MudTextField 
+                    @bind-Value="_searchString" 
+                    Placeholder="Search" 
+                    Adornment="Adornment.Start" 
+                    Immediate="true"
+                    AdornmentIcon="@Icons.Material.Filled.Search" 
+                    IconSize="Size.Medium" 
+                    Variant="Variant.Outlined"
+                    Margin="Margin.Dense"
+                    Class="mt-1 w-100">
+                  </MudTextField>
+                </MudContainer>
+
+                  <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="ml-4" @onclick="() => OpenDialogAsync(_closeButton)" >Add Class_Student</MudButton>
+             </ToolBarContent>
+
+            <Columns>
+                <SelectColumn T="GetClassStudentDTO" />
+                <PropertyColumn Property="x => x.Id" Title="Nr" Sortable="true" Filterable="false" /> 
+                <PropertyColumn Property="x => x.Classs" Title="Class" />
+                <PropertyColumn Property="x => x.Student.Name" Title="Student" />
+                <PropertyColumn Property="x => x.UserAdded" Title="User Added" />
+                <PropertyColumn Property="x => x.DateAdded" Title="Date Added" />
+                <PropertyColumn Property="x => x.Status" Title="Status" />
+
+                @* <TemplateColumn CellClass="d-flex justify-end" Title="Actions">
+                  <CellTemplate>
+                        <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" OnClick="@(() => ViewClassStudentAsync(context.Item, _closeButton))" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="@(() => EditClassStudentAsync(context.Item, _closeButton))" />
+                    </CellTemplate>
+                </TemplateColumn> *@
+            </Columns>
+       <PagerContent>
+                <MudDataGridPager T="GetClassStudentDTO" />
+            </PagerContent>
+
+        </MudDataGrid>
+</MudContainer>
+
+@code{
+
+      private string _searchString;
+        private bool _sortNameByLength;
+        private List<string> _events = new();
+
+        void RowClicked(DataGridRowClickEventArgs<GetClassStudentDTO> args)
+        {
+            _events.Insert(0, $"Event = RowClick, Index = {args.RowIndex}, Data = {System.Text.Json.JsonSerializer.Serialize(args.Item)}");
+        }
+        
+        void RowRightClicked(DataGridRowClickEventArgs<GetClassStudentDTO> args)
+        {
+            _events.Insert(0, $"Event = RowRightClick, Index = {args.RowIndex}, Data = {System.Text.Json.JsonSerializer.Serialize(args.Item)}");
+        }
+
+        void SelectedItemsChanged(HashSet<GetClassStudentDTO> items)
+        {
+            _events.Insert(0, $"Event = SelectedItemsChanged, Data = {System.Text.Json.JsonSerializer.Serialize(items)}");
+        }
+
+    private List<GetClassStudentDTO> classstudents= new ();
+    protected override async Task OnInitializedAsync()
+    {
+        classstudents = await ClassStudentService.GetAllClassStudentAsync();
+    }
+    private readonly DialogOptions _closeButton = new() { CloseButton = true };
+        private async Task OpenDialogAsync(DialogOptions options)
+        {
+            var dialog = await DialogService.ShowAsync<AddClassStudent>("Add New Class_Student", options);
+                
+            var result = await dialog.Result;
+
+            if (result is not null && !result.Canceled)
+            {
+                classstudents = await ClassStudentService.GetAllClassStudentAsync();
+            }
+        }
+         @* private async Task ViewClassStudentAsync(GetClassStudentDTO clssstudent, DialogOptions options)
+            {
+                var parameters = new DialogParameters
+                {
+                    { nameof(ClassStudentDitails.Id), clssstudent.Id } // Pass the Id directly
+                };
+
+                var dialog = await DialogService.ShowAsync<ClassStudentDitails>("Class_Student Details", parameters, options);
+            }
+
+            private async Task EditClassStudentAsync(GetClassStudentDTO clssstudent, DialogOptions options)
+            {
+                var parameters = new DialogParameters
+                {
+                    { nameof(ClassStudentEdit.Id), clssstudent.Id } // Pass the Id directly
+                };
+
+                var dialog = await DialogService.ShowAsync<ClassStudentEdit>("Edit Class_Student", parameters, options);
+                
+                var result = await dialog.Result;
+
+                if (result is not null && !result.Canceled)
+                {
+                    classstudents = await ClassStudentService.GetClassStudentsAsync();
+                    StateHasChanged();
+                }
+            } *@
+            
+       }
+            

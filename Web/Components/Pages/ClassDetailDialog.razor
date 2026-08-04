@@ -1,0 +1,70 @@
+@using Application.DTOs
+@using Application.Services.ClassServices
+@page "/Class/{id:int}"
+@inject IClassService ClassService
+
+
+ @* <h3 class="form-label">Class Details </h3>
+<a href="/class" class="btn btn-secondary">Back to List</a> *@
+
+       @if (isLoading)
+        {
+            <p>Loading class details ...</p>
+        }
+        else if (classs == null)
+        {
+            <small>details could not be found.</small> 
+        }
+        else
+        {
+
+<MudDialog>
+    <DialogContent>
+            <MudGrid>
+
+                <MudItem xs="12" sm="6">
+                    <MudText Typo="Typo.h6">Class ID</MudText>
+                    <MudText Typo="Typo.body1">@classs.Id</MudText>
+                </MudItem>
+
+                <MudItem xs="12" sm="6">
+                    <MudText Typo="Typo.h6">Name</MudText>
+                    <MudText Typo="Typo.body1">@classs.Name</MudText>
+                </MudItem>
+
+                <MudItem xs="12" sm="6">
+                    <MudText Typo="Typo.h6">Faculty</MudText>
+                    <MudText Typo="Typo.body1">@classs.Faculty.Name</MudText>
+                </MudItem>
+
+                <MudItem xs="12" sm="6">
+                    <MudText Typo="Typo.h6">Education Level</MudText>
+                    <MudText Typo="Typo.body1">@classs.EducationLevel.Name</MudText>
+                </MudItem>
+
+            </MudGrid>
+    </DialogContent>
+</MudDialog>
+}
+
+
+ @code {
+    [CascadingParameter] 
+      IMudDialogInstance MudDialog { get; set; }
+      private GetClassDTO? classs;
+      private bool isLoading = true;
+
+    [Parameter] 
+    public int Id { get; set; }
+    protected override async Task OnParametersSetAsync()
+    { 
+        classs=null;
+        isLoading = true;
+       
+            if (Id > 0)
+            {
+                classs = await ClassService.GetClassByIdAsync(Id);
+            }
+            isLoading = false;
+        }
+    } 

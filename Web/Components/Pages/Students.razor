@@ -44,6 +44,8 @@
                 <TemplateColumn Title="Actions">
                      <CellTemplate>
                         <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" @onclick="() => ViewStudentAsync(context.Item)" />
+                         <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="() => EditStudentAsync(context.Item)" />
+                   
                     </CellTemplate>
                 </TemplateColumn>
             </Columns>
@@ -106,7 +108,7 @@
         {
             students= await StudentService.GetAllStudentsAsync();
 
- 
+
         }
         private readonly DialogOptions _closeButton = new() { CloseButton = true };
         private async Task OpenDialogAsync(DialogOptions options)
@@ -130,8 +132,27 @@
 
                     var dialog = await DialogService.ShowAsync<StudentDetailDialog>("Student Details", parameters);
             }
+           private async Task EditStudentAsync(GetStudentDTO student)
+            {
+                var parameters = new DialogParameters
+                {
+                    { nameof(StudentEditDialog.Id), student.Id } // Pass the Id directly
+                };
 
+                var dialog = await DialogService.ShowAsync<StudentEditDialog>("Edit Student", parameters);
+                
+                var result = await dialog.Result;
 
+                if (result is not null && !result.Canceled)
+                {
+                    students = await StudentService.GetAllStudentsAsync();
+                    StateHasChanged();
+                }
+            }
+    
+}
+        
+         
  }    
 
 

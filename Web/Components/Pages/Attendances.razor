@@ -3,12 +3,13 @@
 @using Application.DTOs
 @rendermode InteractiveServer       
 @inject NavigationManager Navigation
+@using Domain.ValueObjects
 @inject IDialogService DialogService
 @inject IAttendanceService AttendanceService
 
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" class="mt-4" >
-        <MudDataGrid T="GetAttendanceDTO" MultiSelection="true" Items="@Attendances" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@_quickFilter"
+        <MudDataGrid T="GetAttendanceDTO" MultiSelection="true" Items="@attendances" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@_quickFilter"
             Hideable="true" RowClick="@RowClicked" RowContextMenuClick="RowRightClicked" SelectedItemsChanged="@SelectedItemsChanged">
             
             <ToolBarContent>
@@ -36,10 +37,21 @@
                 <SelectColumn T="GetAttendanceDTO" />
                 <PropertyColumn Property="x => x.Id" Title="Nr" Sortable="true" Filterable="false" />
                 <PropertyColumn Property="x => x.Name" />
-                <PropertyColumn Property="x => x.ClassId" SortBy="@_sortBy" />
+                <PropertyColumn Property="x => x.Classs.Name" SortBy="@_sortBy" />
                 <PropertyColumn Property="x => x.Date" />
-                 <PropertyColumn Property="x => x.Status" />
-                
+                 
+                  <TemplateColumn Title="Status">
+                    <CellTemplate>
+                        <MudChip T="string"
+                                 Size="Size.Small"
+                                 Variant="Variant.Filled"
+                                 Color="@GetStatusColor(context.Item.Status)">
+                                 @context.Item.Status
+                        </MudChip>
+                    </CellTemplate>
+                 </TemplateColumn>
+                 
+                  
             </Columns>
 
             <PagerContent>
@@ -55,6 +67,13 @@
    private string _searchString = string.Empty;
         private bool _sortNameByLength;
         private List<string> _events = new();
+              private static Color GetStatusColor(AttendanceStatus status) => status switch
+        {
+            AttendanceStatus.Active => Color.Success,
+            AttendanceStatus.Deleted => Color.Error,
+            _ => Color.Default
+        };
+   
 
         void RowClicked(DataGridRowClickEventArgs<GetAttendanceDTO> args)
         {
@@ -87,7 +106,7 @@
             if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            if (x.ClassId.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            if (x.ClasssId.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
 
             if (x.Date.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
@@ -98,11 +117,11 @@
 
             return false;
         };
-    private List<GetAttendanceDTO> Attendances = new List<GetAttendanceDTO>();
+        private List<GetAttendanceDTO> attendances = new ();
         protected override async Task OnInitializedAsync()
-    {
-        Attendances= await AttendanceService.GetAllAttendanceAsync();
-    }
+        {
+            attendances= await AttendanceService.GetAllAttendanceAsync();
+        }
 
         private readonly DialogOptions _closeButton = new() { CloseButton = true };
         private async Task OpenDialogAsync(DialogOptions options)
@@ -113,7 +132,9 @@
 
             if (result is not null && !result.Canceled)
             {
-                 Attendances= await AttendanceService.GetAllAttendanceAsync();
+                attendances= await AttendanceService.GetAllAttendanceAsync();
             }
         }
+
 }
+

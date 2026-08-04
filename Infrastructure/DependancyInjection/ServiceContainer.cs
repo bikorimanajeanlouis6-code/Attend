@@ -10,16 +10,19 @@ namespace Infrastructure.DependancyInjection
 {
     public static class ServiceContainer
     {
-      public static IServiceCollection AddInfrastructureService(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructureService(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("ATTENDCON"))
             );
 
             services.AddScoped<IStudent, StudentRepository>();
-             services.AddScoped<IAttendance, AttendanceRepository>();
-
+            services.AddScoped<IAttendance, AttendanceRepository>();
             services.AddScoped<IClass, ClassRepository>();
+            services.AddScoped<IEducationLevel, EducationLevelRepository>();
+            services.AddScoped<IClassStudent, ClassStudentRepository>();
+            services.AddScoped<IFaculty, FacultyRepository>();
+            services.AddScoped<IStudentAttendance, StudentAttendanceRepository>();
             return services;
         }
     }

@@ -1,9 +1,13 @@
 @using Application.DTOs
 @using Application.Services.AttendanceServices
+@using Application.Services.ClassServices
+@using Domain.Entities
 @using Infrastructure.Migrations
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 @inject IAttendanceService AttendanceService
+@inject IClassService ClassService
+
 
 <MudDialog>
     <TitleContent>Add Attendance</TitleContent>
@@ -15,26 +19,35 @@
                 @bind-Value="Attendance.Name"
                 Margin="Margin.Dense"
                 Variant="Variant.Outlined"
-                Label="Name"
+                Label="Instructor Name"
                 Placeholder="Fullname">
                 </MudTextField>
             </MudItem>
-            <MudItem xs="12">
-                <MudTextField 
-                @bind-Value="Attendance.ClassId"
-                Margin="Margin.Dense"
-                Variant="Variant.Outlined"
-                Placeholder="ClassId">
-                </MudTextField>
+           <MudItem xs="12">
+               <MudItem xs="12">
+                    <MudSelect Label="Class" @bind-Value="@Attendance.ClasssId" Variant="Variant.Outlined" Margin="Margin.Dense" Placeholder="Faculty">
+                        <MudSelectItem Value="0" >--Select Class--</MudSelectItem>
+                         @if (Classs !=null)
+                         foreach(var cl in Classs)
+                         {
+                            <MudSelectItem Value="@cl.Id">@cl.Name</MudSelectItem>
+                         }
+                        
+                    </MudSelect>
+                </MudItem>
+               
             </MudItem>
-            <MudItem xs="12">
-                <MudTextField 
-                @bind-Value="Attendance.Date"
+             <MudItem xs="12">
+                <MudDatePicker 
+                Date="Attendance.Date"
+                DateChanged="date => Attendance.Date= date ?? default"
                 Margin="Margin.Dense"
+                DateFormat="yyyy-MM-dd"
                 Variant="Variant.Outlined"
-                Placeholder="Faculty">
-                </MudTextField>
-            </MudItem>
+                Label="Date of Birth"
+                Placeholder="dd/mm/yyyy">
+                </MudDatePicker>
+                 </MudItem>
              <MudItem xs="12">
                <MudTextField 
                 @bind-Value="Attendance.Status"
@@ -64,10 +77,17 @@
 @code{
      [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; }
+    private List<GetClassDTO>Classs=new ();
     private AddAttendanceDTO Attendance = new ();
+    protected override async Task OnInitializedAsync()
+    {
+        Classs= await ClassService.GetAllClassesAsync();
+
+        
+    }
     private async Task SaveAttendance()
     {
         await AttendanceService.AddAttendanceAsync(Attendance);
        MudDialog.Close(DialogResult.Ok(true));
     }
-}
+} 

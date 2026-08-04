@@ -4,27 +4,32 @@ namespace Application.Services.AttendanceServices
 {
     public class AttendanceService : IAttendanceService
     {
-        private readonly IAttendance _Attendance ;
+        private readonly IAttendance _attendance;
+        public AttendanceService(IAttendance attendance)
+        {
+            _attendance=attendance;
+        }
+
 
         public async Task<List<GetAttendanceDTO>> GetAllAttendanceAsync()
         {
-            return await _Attendance.GetAllAttendanceAsync();
+            return await _attendance.GetAllAttendanceAsync();
         }
           public async Task<GetAttendanceDTO?> GetAttendanceByIdAsync(int id)
         {
-            return await _Attendance.GetAttendanceByIdAsync(id);
+            return await _attendance.GetAttendanceByIdAsync(id);
         }
         public async Task AddAttendanceAsync(AddAttendanceDTO Attendance)
         {
-           await _Attendance.AddAttendanceAsync(Attendance);
+           await _attendance.AddAttendanceAsync(Attendance);
         }
          public async Task UpdateAttendanceAsync(UpdateAttendanceDTO Attendance)
         {
-            await _Attendance.UpdateAttendanceAsync(Attendance);
+            await _attendance.UpdateAttendanceAsync(Attendance);
         }
         public async Task DeleteAttendanceAsync(DeleteAttendanceDTO Attendance)
         {
-            await _Attendance.DeleteAttendanceAsync(Attendance);
+            await _attendance.DeleteAttendanceAsync(Attendance);
         }
    
 

@@ -30,13 +30,7 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Class")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ClassId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ClassStudentId")
+                    b.Property<int>("ClasssId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
@@ -46,13 +40,12 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassStudentId");
+                    b.HasIndex("ClasssId");
 
                     b.ToTable("Attendances");
                 });
@@ -65,10 +58,26 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ClasssId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserAdded")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ClasssId");
 
                     b.HasIndex("StudentId");
 
@@ -93,6 +102,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EducationLevelId");
@@ -110,7 +122,18 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserAdded")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -127,7 +150,18 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserAdded")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -214,6 +248,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("AttendanceId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -225,8 +262,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("UserAdded")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -239,18 +277,30 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Attendance", b =>
                 {
-                    b.HasOne("Domain.Entities.ClassStudent", null)
-                        .WithMany("Attendances")
-                        .HasForeignKey("ClassStudentId");
+                    b.HasOne("Domain.Entities.Classs", "Classs")
+                        .WithMany()
+                        .HasForeignKey("ClasssId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Classs");
                 });
 
             modelBuilder.Entity("Domain.Entities.ClassStudent", b =>
                 {
+                    b.HasOne("Domain.Entities.Classs", "Classs")
+                        .WithMany()
+                        .HasForeignKey("ClasssId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Classs");
 
                     b.Navigation("Student");
                 });
@@ -276,26 +326,21 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.StudentAttendance", b =>
                 {
-                    b.HasOne("Domain.Entities.Attendance", "attendance")
+                    b.HasOne("Domain.Entities.Attendance", "Attendance")
                         .WithMany()
                         .HasForeignKey("AttendanceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Student", "Students")
+                    b.HasOne("Domain.Entities.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Students");
+                    b.Navigation("Attendance");
 
-                    b.Navigation("attendance");
-                });
-
-            modelBuilder.Entity("Domain.Entities.ClassStudent", b =>
-                {
-                    b.Navigation("Attendances");
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Domain.Entities.EducationLevel", b =>

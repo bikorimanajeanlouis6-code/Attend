@@ -1,3 +1,4 @@
+using Domain.ValueObjects;
 namespace Domain.Entities
 {
     public class StudentAttendance
@@ -6,11 +7,15 @@ namespace Domain.Entities
         public int StudentId{get;set;}
         public int AttendanceId{get;set;}
         public string Name{get;set;}
-        public DateTime Time{get;set;}
+        public DateTime DateAdded{get;set;}
+        public string UserAdded { get; set; }
         public string Status{get;set;}
 
         
-         public Attendance attendance{get;set;}
-         public Student Students {get;set;}
+        public Attendance Attendance{get;set;}
+         public Student Student {get;set;}
+        
+      
+    
     }
 }

@@ -1,66 +1,62 @@
 @using Application.DTOs
 @using Application.Services.ClassServices
-@using Infrastructure.Migrations
+@using Application.Services.EducationLevelServices
+@using Application.Services.FacultyServices
+
 @rendermode InteractiveServer
-@inject NavigationManager Navigation
+@inject NavigationManager navigation
 @inject IClassService ClassService
-
-@* @page "/class/add" *@
-@* <div> 
-     <EditForm Model="classs" OnValidSubmit="SaveClass" FormName="AddClass" >
-    
-      <h1>Add Class</h1>
-        <div class="form-group">
-         <label for="name">Name</label>
-        <InputText class="form-control" id="name" @bind-Value="classs.Name" />
-         </div>
-
-        <div class="form-group">
-            <label for="educationLevel">Education Level</label>
-            <InputNumber class="form-control" id="educationLevel" @bind-Value="classs.EducationLevelId" />
-            </div>
-
-            <div class="form-group">
-                <label for="faculty">Faculty</label>
-                <InputNumber class="form-control" id="faculty" @bind-Value="classs.FacultyId" />
-                
-             </div>
-             <button type="submit" class="btn btn-primary mt-3">Add Class</button>   
-     </EditForm>
-   
-</div> *@
+@inject IFacultyService FacultyService
+@inject IEducationLevelService EducationLevelService
+@page "/class/add"
+@inject ISnackbar Snackbar
 
 <MudDialog>
-    <TitleContent>Add Student</TitleContent>
+    <TitleContent>Add Class</TitleContent>
     <DialogContent>
-        <EditForm Model="classs" OnValidSubmit="SaveClass">
+        <EditForm Model="classs" OnValidSubmit="SaveClassAsync">
            <MudGrid>
             <MudItem xs="12">
                 <MudTextField 
                 @bind-Value="classs.Name"
                 Margin="Margin.Dense"
                 Variant="Variant.Outlined"
-                Label="Name"
-                Placeholder="Fullname">
+                Placeholder="Class Name">
                 </MudTextField>
             </MudItem>
+            
+           
             <MudItem xs="12">
-                <MudTextField 
-                @bind-Value="classs.EducationLevelId"
-                Margin="Margin.Dense"
-                Variant="Variant.Outlined"
-                Placeholder="Education Level">
-                </MudTextField>
+                <MudSelect Label="Faculty" @bind-value="classs.FacultyId" Variant="Variant.Outlined" >
+                    
+                    
+                    <MudSelectItem Value="0" Label="Select faculty"></MudSelectItem>
+                         @if (faculty != null)
+                         {
+                            foreach (var fac in faculty)
+                            {
+                                <MudSelectItem Value="@fac.Id">@fac.Name</MudSelectItem>
+                            }
+                         }
+                </MudSelect>
             </MudItem>
+           
             <MudItem xs="12">
-                <MudTextField 
-                @bind-Value="classs.FacultyId"
-                Margin="Margin.Dense"
-                Variant="Variant.Outlined"
-                Placeholder="Faculty">
-                </MudTextField>
+                <MudSelect Label="Education level" @bind-value="classs.EducationLevelId" Variant="Variant.Outlined">
+                    
+                    <MudSelectItem Value="0" Label="Select Education level"></MudSelectItem>
+                         @if (educationlevel != null)
+                         {
+                            foreach (var edu  in educationlevel)
+                            {
+                                <MudSelectItem Value="@edu.Id">@edu.Name</MudSelectItem>
+                            }
+                         }
+                    
+                </MudSelect>
             </MudItem>
-            <MudItem xs="12">
+
+             <MudItem xs="12">
                 <MudButton 
                 Variant="Variant.Filled"
                 Color="Color.Primary"
@@ -78,13 +74,48 @@
 </MudDialog>
   
 
-@code{
-     [CascadingParameter]
+
+
+ @code{
+      [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; }
     private AddClassDTO classs = new ();
-    private async Task SaveClass()
+   
+    
+    
+    private List<GetFacultyDTO> faculty = new();
+    private List<GetEducationLevelDTO> educationlevel = new();
+
+    protected override async Task OnInitializedAsync()
     {
-        await ClassService.AddClassAsync(classs);
-       MudDialog.Close(DialogResult.Ok(true));
+
+            var fac = await FacultyService.GetAllFacultyAsync();
+            if (faculty != null)
+            {
+            faculty=fac;
+            StateHasChanged();
+            }
+
+            var edu = await EducationLevelService.GetAllEducationLevelAsync();
+            if (edu != null)
+            {
+            educationlevel=edu;
+            StateHasChanged();
+            }
+
     }
+    private async Task SaveClassAsync()
+    {
+      try
+      {
+         await ClassService.AddClassAsync(classs);
+        MudDialog.Close(DialogResult.Ok(true));
+        Snackbar.Add("Added Successfully", Severity.Success);
+      }
+      catch (Exception ex)
+      {
+        Snackbar.Add(ex.Message ,Severity.Error);
+      }
+    }
+   
 }

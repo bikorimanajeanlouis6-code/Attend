@@ -17,9 +17,6 @@ namespace Infrastructure.Data
         public DbSet<Attendance> Attendances{get;set;}
 
 
-
-
-
 }
 
 }

@@ -1,39 +1,30 @@
 @page "/class"
+
 @using Application.Services.ClassServices
 @using Application.DTOs
-@rendermode InteractiveServer       
+@using Application.Services.FacultyServices
+@using Application.Services.EducationLevelServices
+@using Domain.Entities
+@using Domain.ValueObjects
 @inject NavigationManager Navigation
 @inject IDialogService DialogService
 @inject IClassService ClassService
-@* <h1>
-    Class List
-     <a class="btn btn-primary" href="/class/add">Add Class</a>
-</h1>
-<table class="table">
-    <tr>
-        <th>Class ID</th>
-        <th>Class Name</th>
-        <th>Class EducationLevel</th>
-        <th>Class Faculty</th>
-    </tr>
+@inject IFacultyService FacultyService
 
-@foreach(var cls in classes){
-    <tr>
-        <td>@cls.Id</td>
-        <td>@cls.Name</td>
-        <td>@cls.EducationLevelId</td>
-        <td>@cls.FacultyId</td>
+@inject IEducationLevelService EducationLevelService
 
-        <td> <a href="/Class/@cls.Id" class="btn btn-primary" >View Details</a>
-        <a class="btn btn-primary" href="/class/add">Add Class</a></td>
-    </tr>
-
-}
-</table> *@
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4" >
-        <MudDataGrid T="GetClassDTO" MultiSelection="true" Items="@classes" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@_quickFilter"
-            Hideable="true" RowClick="@RowClicked" RowContextMenuClick="RowRightClicked" SelectedItemsChanged="@SelectedItemsChanged">
+        <MudDataGrid T="GetClassDTO"
+         MultiSelection="true"
+          Items="@classes" 
+          SortMode="SortMode.Multiple"
+          Filterable="true" 
+          QuickFilter="@_quickFilter"
+          Hideable="true" 
+          RowClick="@RowClicked" 
+          RowContextMenuClick="RowRightClicked"
+          SelectedItemsChanged="@SelectedItemsChanged">
             
             <ToolBarContent>
                 <MudText Typo="Typo.h6">Classes</MudText>
@@ -60,8 +51,28 @@
                 <SelectColumn T="GetClassDTO" />
                 <PropertyColumn Property="x => x.Id" Title="Nr" Sortable="true" Filterable="false" />
                 <PropertyColumn Property="x => x.Name" />
-                <PropertyColumn Property="x => x.EducationLevelId" SortBy="@_sortBy" />
-                <PropertyColumn Property="x => x.FacultyId" />
+                <PropertyColumn Property="x => x.EducationLevel.Name" SortBy="@_sortBy" />
+                <PropertyColumn Property="x => x.Faculty.Name" />
+                 <TemplateColumn Title="Status">
+                    <CellTemplate>
+                        <MudChip T="string"
+                                 Size="Size.Small"
+                                 Variant="Variant.Filled"
+                                 Color="@GetStatusColor(context.Item.Status)">
+                                 @context.Item.Status
+                        </MudChip>
+                    </CellTemplate>
+                 </TemplateColumn>
+
+                 <TemplateColumn Title="Actions">
+                     <CellTemplate>
+                        <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" @onclick="() => ViewClassAsync(context.Item)" />
+                         <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" @onclick="() => EditClassAsync(context.Item)" />
+                         <TemplateColumn Title="Status">
+                    
+                </TemplateColumn>
+                    </CellTemplate>
+                </TemplateColumn>
             </Columns>
 
             <PagerContent>
@@ -77,6 +88,19 @@
    private string _searchString = string.Empty;
         private bool _sortNameByLength;
         private List<string> _events = new();
+       
+        private List<Faculty> faculties = new();
+        private List<EducationLevel> educationLevels = new();
+
+          private static Color GetStatusColor(ClassStatus status) => status switch
+        {
+            ClassStatus.Active => Color.Success,
+            ClassStatus.Full => Color.Warning,
+            ClassStatus.Ongoing => Color.Info,
+            ClassStatus.Deleted => Color.Error,
+            _ => Color.Default
+        };
+   
 
         void RowClicked(DataGridRowClickEventArgs<GetClassDTO> args)
         {
@@ -124,7 +148,7 @@
         classes= await ClassService.GetAllClassesAsync();
     }
 
-        private readonly DialogOptions _closeButton = new() { CloseButton = true };
+     private readonly DialogOptions _closeButton = new() { CloseButton = true };
         private async Task OpenDialogAsync(DialogOptions options)
         {
             var dialog = await DialogService.ShowAsync<AddClass>("Add New Class", options);
@@ -136,4 +160,33 @@
                  classes= await ClassService.GetAllClassesAsync();
             }
         }
+         private async Task ViewClassAsync(GetClassDTO Class )
+            {
+                var parameters = new DialogParameters
+                {
+                    { nameof(ClassDetailDialog.Id), Class.Id } // Pass the Id directly
+                };
+
+              var dialog = await DialogService.ShowAsync<ClassDetailDialog>("Class Details", parameters);
+
+            }
+              private async Task EditClassAsync(GetClassDTO Class)
+            {
+                var parameters = new DialogParameters
+                {
+                    { nameof(ClassEditDialog.Id), Class.Id } // Pass the Id directly
+                };
+
+                var dialog = await DialogService.ShowAsync<ClassEditDialog>("Edit Class", parameters);
+                
+                var result = await dialog.Result;
+
+                if (result is not null && !result.Canceled)
+                {
+                    classes = await ClassService.GetAllClassesAsync();
+                    StateHasChanged();
+                }
+            } 
+    
+
 }
