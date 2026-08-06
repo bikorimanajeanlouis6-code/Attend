@@ -9,7 +9,7 @@ namespace Application.DTOs
         public int AttendanceId{get;set;}
         public string Name{get;set;}
         public DateTime Time{get;set;}
-        public string Status{get;set;}
+        public StudentAttendanceStatus Status{get;set;}
     }
     public class UpdateStudentAttendanceDTO
     {
@@ -18,7 +18,7 @@ namespace Application.DTOs
         public int AttendanceId{get;set;}
         public string Name{get;set;}
         public DateTime DateAdded{get;set;}
-        public string Status{get;set;}
+        public StudentAttendanceStatus Status{get;set;}
     }
     public class GetStudentAttendanceDTO
     {
@@ -27,7 +27,7 @@ namespace Application.DTOs
         public int AttendanceId{get;set;}
         public string Name{get;set;}
         public DateTime DateAdded{get;set;}
-        public string Status{get;set;}
+        public StudentAttendanceStatus Status{get;set;}
         public object Datetime { get; set; }
         public object UserAdded { get; set; }
     }

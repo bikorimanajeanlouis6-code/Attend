@@ -38,4 +38,10 @@ namespace Application.DTOs
         
         
     }
+
+    public class GetClassStatusCountDTO
+    {
+        public ClassStatus Status{get; set;}
+        public int Count{get;set;}
+    }
 }

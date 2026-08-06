@@ -3,8 +3,11 @@ namespace Domain.ValueObjects
         public enum StudentStatus
         {
             Active,
-            Inactive,
-            Suspended
+            Suspended,
+            Repeated,
+            Promoted,
+            Dropped,
+            Deleted 
         }
         public enum ClassStatus
         {
@@ -13,7 +16,7 @@ namespace Domain.ValueObjects
             Ongoing,
             Deleted
         }
-        public enum StudentAttendanceStatus
+        public enum ClassStudentStatus
         {
             Active,
             Promoted,
@@ -25,5 +28,20 @@ namespace Domain.ValueObjects
     {
        Active,
        Deleted, 
+    }
+    public enum StudentAttendanceStatus
+    {
+         Suspended,
+         Repeated,
+         Promoted,
+         Active,
+         Deleted,
+         Absent,
+         present,
+    }
+    public enum StudentSex
+    {
+        Male,
+        Female,
     }
 }

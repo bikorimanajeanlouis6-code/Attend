@@ -67,7 +67,7 @@
    private string _searchString = string.Empty;
         private bool _sortNameByLength;
         private List<string> _events = new();
-              private static Color GetStatusColor(AttendanceStatus status) => status switch
+         private static Color GetStatusColor(AttendanceStatus status) => status switch
         {
             AttendanceStatus.Active => Color.Success,
             AttendanceStatus.Deleted => Color.Error,
@@ -135,6 +135,7 @@
                 attendances= await AttendanceService.GetAllAttendanceAsync();
             }
         }
+ 
 
 }
 

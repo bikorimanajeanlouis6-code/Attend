@@ -1,5 +1,6 @@
-@using Application.Services.StudentServices
 @using Application.DTOs;
+@using Application.Services.StudentServices
+@using Domain.ValueObjects
 @using Infrastructure.Migrations
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
@@ -23,16 +24,17 @@
                 </MudTextField>
             </MudItem>
             <MudItem xs="6">
-                <MudSelect 
-                T="string"
+                 <MudSelect
                 @bind-Value="student.Sex"
                 Margin="Margin.Dense"
                 Variant="Variant.Outlined"
                 Placeholder="select sex">
-                <MudSelectItem Value="@("Male")">Male</MudSelectItem>
-                <MudSelectItem Value="@("Female")">Female</MudSelectItem>
-
-                </MudSelect>
+                
+                @foreach(var sex in Enum.GetValues(typeof(StudentSex))){
+                    <MudSelectItem Value="sex">@sex</MudSelectItem> 
+                }
+            
+                </MudSelect> 
             </MudItem>
             <MudItem xs="6">
                 <MudTextField 
@@ -145,6 +147,7 @@
        await StudentService.AddStudentAsync(student);
        MudDialog.Close(DialogResult.Ok(true));
     }
-  
+    private List<StudentSex> sexes = new();
     
+
 }

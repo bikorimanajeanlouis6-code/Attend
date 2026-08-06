@@ -12,5 +12,7 @@ namespace Application.Interfaces
   
      public Task UpdateClassAsync(UpdateClassDTO student);
      public Task DeleteClassAsync(DeleteClassDTO student);
+
+      public Task<List<GetClassStatusCountDTO>> GetClassStatusCountAsync();
 }
     }

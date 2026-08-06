@@ -31,6 +31,10 @@ namespace Application.Services.StudentServices
              await _student.DeleteStudentAsync(student);
         }
 
+         public async Task<List<GetStudentSexCountDTO>> GetStudentSexCountsAsync()
+        {
+            return await _student.GetStudentSexCountsAsync();
+        }
     }
 
 }

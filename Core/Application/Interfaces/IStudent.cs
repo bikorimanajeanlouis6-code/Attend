@@ -10,8 +10,8 @@ namespace Application.Interfaces
         Task <GetStudentDTO?> GetStudentByIdAsync(int id);
         Task UpdateStudentAsync(UpdateStudentDTO student);
         Task DeleteStudentAsync(DeleteStudentDTO student);
-         
 
+        Task<List<GetStudentSexCountDTO>> GetStudentSexCountsAsync();
 
     }
 }

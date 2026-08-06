@@ -10,6 +10,7 @@ namespace Application.DTOs
         public Classs Classs{get; set;}
         public DateTime Date{get;set;}
         public string Status{get;set;}
+        public string InstructorName{get;set;}
         public string Name{get;set;}
     }
     public class UpdateAttendanceDTO
@@ -17,6 +18,7 @@ namespace Application.DTOs
         public int Id{get;set;}
         public int ClasssId{get;set;}
         public DateTime Date{get;set;}
+        public string InstructorName{get;set;}
         public string Name{get;set;}
     }
     public class GetAttendanceDTO
@@ -25,6 +27,7 @@ namespace Application.DTOs
         public int ClasssId{get;set;}
         public Classs Classs{get; set;}
         public DateTime Date{get;set;}
+        public string InstructorName{get;set;}
         public AttendanceStatus Status{get;set;}
         public string Name{get;set;}
 

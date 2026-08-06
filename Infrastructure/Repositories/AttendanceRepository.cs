@@ -26,7 +26,7 @@ namespace Infrastructure.Repositories
                 ClasssId = s.ClasssId,
                 Classs=s.Classs,
                 Date = s.Date,
-                Status = s.Status,
+                Status = AttendanceStatus.Active,
 
             })
               .ToListAsync();

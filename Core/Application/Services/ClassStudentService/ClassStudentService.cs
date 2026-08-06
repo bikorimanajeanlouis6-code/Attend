@@ -19,7 +19,7 @@ namespace Application.Services.ClassStudentServices
             await _classStudentRepository.DeleteClassStudentAsync(classStudent);
         }
 
-        public async Task<List<GetClassStudentDTO>> GetAllClassStudentAsync()
+        public async Task<List<GetClassStudentDTO>> GetAllClassStudentsAsync()
         {
             return await _classStudentRepository.GetAllClassStudentsAsync();
         }

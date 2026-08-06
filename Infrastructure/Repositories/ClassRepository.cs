@@ -89,5 +89,17 @@ namespace Infrastructure.Repositories
                  await _dbcontext.SaveChangesAsync();
              }
         }
+    
+     public async Task<List<GetClassStatusCountDTO>> GetClassStatusCountAsync()
+        {
+           return await _dbcontext.Classses
+           .GroupBy(c => c.Status)
+           .Select(c => new GetClassStatusCountDTO
+           {
+               Status = c.Key,
+               Count = c.Count()
+           })
+           .ToListAsync();
+        }
     }
 }

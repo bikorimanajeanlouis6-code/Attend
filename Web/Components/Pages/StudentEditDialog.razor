@@ -1,6 +1,6 @@
 @using Application.DTOs
 @using Application.Services.StudentServices
-
+@using Domain.ValueObjects
 @inject IStudentService StudentService
 
 <MudDialog>
@@ -18,9 +18,18 @@
         <MudForm @ref="_form">
             <MudNumericField @bind-Value="student.Id" Label="Id" Variant="Variant.Outlined" Required="true" RequiredError="Faculty ID is required." Class="mb-3" />
             <MudTextField @bind-Value="student.Name" Label="Name" Variant="Variant.Outlined" Required="true" RequiredError="Name is required." Class="mb-3" />
-            <MudSelect T="string" label="Sex" @bind-Value="student.Sex" Margin="Margin.Dense" Variant="Variant.Outlined" Placeholder="select sex">
-                <MudSelectItem Value="@("Male")">Male</MudSelectItem>
-                <MudSelectItem Value="@("Female")">Female</MudSelectItem>
+            <MudSelect 
+                      label="Sex" 
+                      @bind-Value="student.Sex" 
+                      Margin="Margin.Dense" 
+                      Variant="Variant.Outlined" 
+                      Placeholder="select sex"> 
+              
+               @foreach(var sex in sexes){
+
+                    <MudSelectItem Value="@sex">@sex</MudSelectItem> 
+                }
+
 
             </MudSelect>
             <MudTextField @bind-Value="student.Address" Label="Address" Variant="Variant.Outlined" Required="true" RequiredError="Address is required." Class="mb-3" />
@@ -94,4 +103,6 @@
     {
         MudDialog?.Cancel();
     }
+
+    private List<StudentSex> sexes = new();
 }

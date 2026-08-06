@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Infrastructure.Data;
 using Application.DTOs;
 using Microsoft.EntityFrameworkCore;
+using Domain.ValueObjects;
 namespace Infrastructure.Repositories
 
 {
@@ -33,12 +34,17 @@ namespace Infrastructure.Repositories
         }
          public async Task AddClassStudentAsync(AddClassStudentDTO classStudent)
         {
+            var existingstudent = await _dbcontext.ClassStudents.AnyAsync(r => r.StudentId==classStudent.StudentId && r.ClasssId== classStudent.ClasssId);
+            if (existingstudent)
+            {
+                throw new InvalidCastException("This student arleady exists in this class");
+            }
              _dbcontext.ClassStudents.Add(new ClassStudent
             {
                 ClasssId = classStudent.ClasssId,
                 StudentId = classStudent.StudentId,
                 UserAdded = "Admin",
-                Status="Active",
+                Status=ClassStudentStatus.Active,
                 DateAdded = DateTime.UtcNow
 
             });

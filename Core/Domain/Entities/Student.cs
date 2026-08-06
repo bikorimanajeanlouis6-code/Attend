@@ -5,7 +5,7 @@ namespace Domain.Entities
         public int Id{get;set;}
         public string Name{get;set;}
         public DateTime DateofBirth {get;set;}
-        public string Sex {get; set;}
+        public StudentSex Sex {get; set;}
         public string Email{get;set;}
         public string Phone{ get;set;}
         public string RegNumber{get;set;}
@@ -17,11 +17,11 @@ namespace Domain.Entities
         public string MatherPhoneNumber{get;set;}
         public string UserAdded{get;set;}
         public DateTime DateAdded{get;set;}
-        public string Status{get;set;} = "Active";
+       
 
-                
 
+       public StudentStatus Status { get; set; }
 
          
-    }
+    }        
 }

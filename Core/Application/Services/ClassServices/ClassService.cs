@@ -29,5 +29,10 @@ namespace Application.Services.ClassServices
         {
             await _classes.DeleteClassAsync(classs);
         }
+    
+        public async Task<List<GetClassStatusCountDTO>> GetClassStatusCountAsync()
+        {
+            return await _classes.GetClassStatusCountAsync();
+        }
     }
 }

@@ -4,6 +4,7 @@
 @using Application.DTOs
 @inject NavigationManager Navigation
 @inject IDialogService DialogService
+@using Domain.ValueObjects
 @inject IStudentService StudentService
 
 
@@ -41,6 +42,19 @@
                 <PropertyColumn Property="x => x.DateofBirth" Title="DateofBirth" />
                 <PropertyColumn Property="x => x.Phone" Title="Phone" />
                 <PropertyColumn Property="x => x.Email" Title="Email" />
+
+                    <TemplateColumn Title="Status">
+                              <CellTemplate>
+                              <MudChip T="string"
+                                 Size="Size.Small"
+                                 Variant="Variant.Filled"
+                                 Color="@GetStatusColor(context.Item.Status)">
+                                 @context.Item.Status
+                        </MudChip>
+                    </CellTemplate>
+                 </TemplateColumn>
+
+
                 <TemplateColumn Title="Actions">
                      <CellTemplate>
                         <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" @onclick="() => ViewStudentAsync(context.Item)" />
@@ -62,6 +76,13 @@
         private string _searchString;
         private bool _sortNameByLength;
         private List<string> _events = new();
+        private static Color GetStatusColor(StudentStatus status) => status switch
+        {
+            StudentStatus.Active => Color.Success,
+            StudentStatus.Deleted => Color.Error,
+            _ => Color.Default
+        };
+   
 
               void RowClicked(DataGridRowClickEventArgs<GetStudentDTO> args)
         {
@@ -93,7 +114,7 @@
             if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            if (x.Sex.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            if (x.Sex.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
 
             if ($"{x.Phone} {x.Email}".Contains(_searchString))

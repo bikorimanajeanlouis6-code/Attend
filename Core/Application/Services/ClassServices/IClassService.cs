@@ -9,6 +9,6 @@ namespace Application.Services.ClassServices
            Task <GetClassDTO?> GetClassByIdAsync(int id);
            Task UpdateClassAsync(UpdateClassDTO classs);
            Task DeleteClassAsync(DeleteClassDTO classs);
-
+           Task<List<GetClassStatusCountDTO>> GetClassStatusCountAsync();
     }
 }

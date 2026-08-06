@@ -1,13 +1,13 @@
-@page "/Class_Student"
+@* @page "/Class_Student"
 @using Application.Services.ClassStudentServices
 @using Application.DTOs;
 @using Domain.Entities;
 
 @inject IDialogService DialogService
-@inject IClassStudentService ClassStudentService
+@inject IClassStudentService ClassStudentService *@
 
 
- <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4" >
+ @* <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4" >
         <MudDataGrid T="GetClassStudentDTO" MultiSelection="true" Items="@classstudents" SortMode="SortMode.Multiple" Filterable="true" 
             Hideable="true" RowClick="@RowClicked" RowContextMenuClick="RowRightClicked" SelectedItemsChanged="@SelectedItemsChanged">
             
@@ -36,25 +36,18 @@
                 <PropertyColumn Property="x => x.Id" Title="Nr" Sortable="true" Filterable="false" /> 
                 <PropertyColumn Property="x => x.Classs" Title="Class" />
                 <PropertyColumn Property="x => x.Student.Name" Title="Student" />
-                <PropertyColumn Property="x => x.UserAdded" Title="User Added" />
+                <PropertyColumn Property="ax => x.UserAdded" Title="User Added" />
                 <PropertyColumn Property="x => x.DateAdded" Title="Date Added" />
                 <PropertyColumn Property="x => x.Status" Title="Status" />
-
-                @* <TemplateColumn CellClass="d-flex justify-end" Title="Actions">
-                  <CellTemplate>
-                        <MudIconButton Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" OnClick="@(() => ViewClassStudentAsync(context.Item, _closeButton))" />
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="@(() => EditClassStudentAsync(context.Item, _closeButton))" />
-                    </CellTemplate>
-                </TemplateColumn> *@
             </Columns>
        <PagerContent>
                 <MudDataGridPager T="GetClassStudentDTO" />
             </PagerContent>
 
         </MudDataGrid>
-</MudContainer>
+</MudContainer> *@
 
-@code{
+@* @code{
 
       private string _searchString;
         private bool _sortNameByLength;
@@ -92,7 +85,7 @@
                 classstudents = await ClassStudentService.GetAllClassStudentAsync();
             }
         }
-         @* private async Task ViewClassStudentAsync(GetClassStudentDTO clssstudent, DialogOptions options)
+         private async Task ViewClassStudentAsync(GetClassStudentDTO clssstudent, DialogOptions options)
             {
                 var parameters = new DialogParameters
                 {
@@ -118,7 +111,7 @@
                     classstudents = await ClassStudentService.GetClassStudentsAsync();
                     StateHasChanged();
                 }
-            } *@
+            }
             
        }
-            
+             *@

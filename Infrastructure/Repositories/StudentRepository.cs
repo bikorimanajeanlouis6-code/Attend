@@ -3,6 +3,7 @@ using Domain.Entities;
 using Application.Interfaces;
 using Infrastructure.Data;
 using Application.DTOs;
+using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories
 {
@@ -30,9 +31,9 @@ namespace Infrastructure.Repositories
                 FatherPhoneNmuber=s.FatherPhoneNmuber,
                 RegNumber=s.RegNumber,
                 MatherPhoneNumber=s.MatherPhoneNumber,
-                Status=s.Status,
                 DateAdded=s.DateAdded,
-                UserAdded=s.UserAdded
+                UserAdded=s.UserAdded,
+                Status = s.Status
 
              }).ToListAsync();
         }
@@ -53,7 +54,8 @@ namespace Infrastructure.Repositories
                  MatherPhoneNumber=student.MatherPhoneNumber,
                  UserAdded="Admin",
                  DateAdded = DateTime.UtcNow,
-                 Status="Active"
+                 Status = StudentStatus.Active,
+                //  Status="Active"
              }  );
             await _dbcontext.SaveChangesAsync();
         }
@@ -100,9 +102,20 @@ namespace Infrastructure.Repositories
             var ExistingStudent = await _dbcontext.Students.FirstOrDefaultAsync(s => s.Id == student.Id);
             if(ExistingStudent != null)
             {
-               
+                ExistingStudent.Status=StudentStatus.Deleted;
                 await _dbcontext.SaveChangesAsync();
             }
+        }
+         public async Task<List<GetStudentSexCountDTO>> GetStudentSexCountsAsync()
+        {
+           return await _dbcontext.Students
+           .GroupBy(g => g.Sex)
+           .Select(c => new GetStudentSexCountDTO
+           {
+               Sex = c.Key,
+               Count = c.Count()
+           })
+           .ToListAsync();
         }
     }
 }
