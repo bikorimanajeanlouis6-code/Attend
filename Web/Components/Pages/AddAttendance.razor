@@ -1,93 +1,187 @@
-@using Application.DTOs
 @using Application.Services.AttendanceServices
 @using Application.Services.ClassServices
-@using Domain.Entities
-@using Infrastructure.Migrations
+@using Application.DTOs
+@using Domain.ValueObjects
+@using Application.Services.StudentAttendanceServices
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 @inject IAttendanceService AttendanceService
 @inject IClassService ClassService
+@inject IDialogService DialogService
+@inject IStudentAttendanceService StudentAttendanceService
+@inject ISnackbar Snackbar
 
 
-<MudDialog>
-    <TitleContent>Add Attendance</TitleContent>
+<MudDialog MaxWidth="MaxWidth.ExtraExtraLarge" FullWidth="true">
+    <TitleContent>
+        <MudText Typo="Typo.h6">Take Attendance</MudText>
+    </TitleContent>
     <DialogContent>
-        <EditForm Model="Attendance" OnValidSubmit="SaveAttendance">
-           <MudGrid>
-            <MudItem xs="12">
-                <MudTextField 
-                @bind-Value="Attendance.Name"
-                Margin="Margin.Dense"
-                Variant="Variant.Outlined"
-                Label="Instructor Name"
-                Placeholder="Fullname">
-                </MudTextField>
-            </MudItem>
-           <MudItem xs="12">
-               <MudItem xs="12">
-                    <MudSelect Label="Class" @bind-Value="@Attendance.ClasssId" Variant="Variant.Outlined" Margin="Margin.Dense" Placeholder="Faculty">
-                        <MudSelectItem Value="0" >--Select Class--</MudSelectItem>
-                         @if (Classs !=null)
-                         foreach(var cl in Classs)
-                         {
-                            <MudSelectItem Value="@cl.Id">@cl.Name</MudSelectItem>
-                         }
-                        
-                    </MudSelect>
-                </MudItem>
-               
-            </MudItem>
-             <MudItem xs="12">
-                <MudDatePicker 
-                Date="Attendance.Date"
-                DateChanged="date => Attendance.Date= date ?? default"
-                Margin="Margin.Dense"
-                DateFormat="yyyy-MM-dd"
-                Variant="Variant.Outlined"
-                Label="Date of Birth"
-                Placeholder="dd/mm/yyyy">
-                </MudDatePicker>
-                 </MudItem>
-             <MudItem xs="12">
-               <MudTextField 
-                @bind-Value="Attendance.Status"
-                Margin="Margin.Dense"
-                Variant="Variant.Outlined"
-                Placeholder="Status">
-                </MudTextField>
-            </MudItem>
-            <MudItem xs="12">
-                <MudButton 
-                Variant="Variant.Filled"
-                Color="Color.Primary"
-                FullWidth="true" 
-                ButtonType="ButtonType.Submit">
-                SAVE
-                </MudButton>
-            </MudItem>
+        <MudStack Spacing="3">
 
-           </MudGrid> 
-        </EditForm>
+            <EditForm Model="attendance" OnValidSubmit="SaveAttendanceAsync">
+                <MudGrid Class="mb-3">
+                    <MudItem xs="12">
 
-    </DialogContent>
-    
-</MudDialog>
+                        <MudTextField Label="Instructor Name" @bind-Value="attendance.InstructorName"
+                                      Margin="Margin.Dense" Variant="Variant.Outlined" Placeholder="Instructor name">
+                        </MudTextField>
+
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudAutocomplete T="GetClassDTO" @bind-Value="selectedClass"
+                                         ToStringFunc="@(s => s?.Name ?? string.Empty)" SearchFunc="Search" Margin="Margin.Dense"
+                                         Variant="Variant.Outlined" Label="Class" Placeholder="Select Class" />
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudDatePicker Date="attendance.Date" DateChanged="date => attendance.Date = date ?? default"
+                                       Margin="Margin.Dense" DateFormat="yyyy-MM-dd" Label="Date" Variant="Variant.Outlined"
+                                       Placeholder="dd/mm/yyyy">
+                        </MudDatePicker>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true"
+                                   ButtonType="ButtonType.Submit">
+                            SAVE
+                        </MudButton>
+                    </MudItem>
+                </MudGrid>
+            </EditForm>
+
+            <MudDataGrid T="GetStudentAttendanceDTO" MultiSelection="true" Dense="true" Items="@studentAttendances"
+                         MaxWidth="800px">
+                <ToolBarContent>
+                    <MudText Typo="Typo.body2">Class Members Attendance</MudText>
+                </ToolBarContent>
+                <Columns>
+                    <SelectColumn T="GetStudentAttendanceDTO" />
+                    <PropertyColumn Property="x => x.Id" Title="Nr" Sortable="true" Filterable="false"
+                                    HeaderStyle="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                    CellStyle="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" />
+                    <PropertyColumn Property="x => x.Student.Name" Title="Student"
+                                    HeaderStyle="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                    CellStyle="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" />
+                    <PropertyColumn Property="x => x.Student.Id" Title="Student ID"
+                                    HeaderStyle="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                    CellStyle="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" />
+                    <TemplateColumn Title="Status"
+                                    HeaderStyle="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                    CellStyle="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <CellTemplate>
+                            <MudChip T="string" Size="Size.Small" Variant="Variant.Filled"
+                                     Color="@GetStatusColor(context.Item.Status)">
+                                @context.Item.Status
+                            </MudChip>
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <PropertyColumn Property="x => x.AttendanceId" Title="Attendance"
+                                    HeaderStyle="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                    CellStyle="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" />
+                    <PropertyColumn Property="x => x.DateAdded" Title="Marked At" Format="yyyy-MM-dd"
+                                    HeaderStyle="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                    CellStyle="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" />
+                    <TemplateColumn Title="Actions" HeaderStyle="white-space:nowrap" ItemStyle="white-space:nowrap">
+                        <CellTemplate>
+                            <MudMenu Icon="@Icons.Material.Filled.MoreVert" AriaLabel="Open menu">
+                                <MudMenuItem Icon="@Icons.Material.Filled.Add"
+                                             OnClick="@(() => OnPresent(context.Item))">Present</MudMenuItem>
+                                <MudMenuItem Icon="@Icons.Material.Filled.Info"
+                                             OnClick="@(() => OnAbsent(context.Item))">Absent</MudMenuItem>
+                                <MudMenuItem Icon="@Icons.Material.Filled.Info" OnClick="@(() => OnLate(context.Item))">
+                                    Late</MudMenuItem>
+                                    <MudMenuItem Icon="@Icons.Material.Filled.Info"
+                                                 OnClick="@(() => OnExcused(context.Item))">Excused</MudMenuItem>
+                                </MudMenu>
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+
+            
+                    <PagerContent>
+                        <MudDataGridPager T="GetStudentAttendanceDTO" />
+                    </PagerContent>
+
+                </MudDataGrid>
+            </MudStack>
+        </DialogContent>
+    </MudDialog>
 
 
-@code{
-     [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; }
-    private List<GetClassDTO>Classs=new ();
-    private AddAttendanceDTO Attendance = new ();
-    protected override async Task OnInitializedAsync()
+@code {
+    private List<GetStudentAttendanceDTO> studentAttendances = new();
+    private AddAttendanceDTO attendance = new();
+
+    private List<GetClassDTO> Classs = new();
+    private GetClassDTO? selectedClass;
+
+    private async Task<IEnumerable<GetClassDTO>> Search(string value, CancellationToken token)
     {
-        Classs= await ClassService.GetAllClassesAsync();
+        await Task.Delay(5, token);
 
-        
+        if (string.IsNullOrEmpty(value))
+        {
+            return Classs;
+        }
+
+        return Classs.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
-    private async Task SaveAttendance()
+
+    protected async override Task OnInitializedAsync()
     {
-        await AttendanceService.AddAttendanceAsync(Attendance);
-       MudDialog.Close(DialogResult.Ok(true));
+        Classs = await ClassService.GetAllClassesAsync();
     }
-} 
+
+    private static Color GetStatusColor(AttendanceStatus status) => status switch
+    {
+        AttendanceStatus.UnTaken => Color.Default,
+        AttendanceStatus.Present => Color.Success,
+        AttendanceStatus.Absent => Color.Warning,
+        AttendanceStatus.Late => Color.Info,
+        AttendanceStatus.Excused => Color.Error,
+        _ => Color.Default
+    };
+
+    private async Task SaveAttendanceAsync()
+    {
+        if (selectedClass == null)
+        {
+            Snackbar.Add("Please select a class before saving.", Severity.Warning);
+            return;
+        }
+
+        attendance.ClasssId = selectedClass.Id;
+
+        try
+        {
+
+            studentAttendances = await AttendanceService.AddAttendanceWithStudentAttendanceAsync(attendance);
+            Snackbar.Add("Attendance batch created successfully.", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+    private async Task AddStudentAttendanceAsync(GetStudentAttendanceDTO item, AttendanceStatus status)
+    {
+        try
+        {
+            await StudentAttendanceService.AddStudentAttendanceAsync(item.Id, status);
+            item.Status = status;
+
+            Snackbar.Add($"Status updated to {status}.", Severity.Success);
+
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+    private Task OnPresent(GetStudentAttendanceDTO item) => AddStudentAttendanceAsync(item, AttendanceStatus.Present);
+    private Task OnAbsent(GetStudentAttendanceDTO item) => AddStudentAttendanceAsync(item, AttendanceStatus.Absent);
+    private Task OnLate(GetStudentAttendanceDTO item) => AddStudentAttendanceAsync(item, AttendanceStatus.Late);
+    private Task OnExcused(GetStudentAttendanceDTO item) => AddStudentAttendanceAsync(item, AttendanceStatus.Excused);
+}

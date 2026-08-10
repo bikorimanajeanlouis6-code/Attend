@@ -23,15 +23,11 @@ namespace Application.Services.AttendanceServices
         {
            await _attendance.AddAttendanceAsync(Attendance);
         }
-         public async Task UpdateAttendanceAsync(UpdateAttendanceDTO Attendance)
+       
+          public async Task<List<GetStudentAttendanceDTO>> AddAttendanceWithStudentAttendanceAsync(AddAttendanceDTO attendance)
         {
-            await _attendance.UpdateAttendanceAsync(Attendance);
+            return await _attendance.AddAttendanceWithStudentAttendanceAsync(attendance);
         }
-        public async Task DeleteAttendanceAsync(DeleteAttendanceDTO Attendance)
-        {
-            await _attendance.DeleteAttendanceAsync(Attendance);
-        }
-   
 
     }
 }

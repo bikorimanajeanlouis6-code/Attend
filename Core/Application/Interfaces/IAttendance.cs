@@ -3,15 +3,16 @@ namespace Application.Interfaces
 {
     public interface IAttendance
     {
-    public   Task  <List<GetAttendanceDTO>> GetAllAttendanceAsync();
+    Task<List<GetAttendanceDTO>> GetAllAttendanceAsync();
     
      Task AddAttendanceAsync(AddAttendanceDTO Attendance);
+    Task<List<GetStudentAttendanceDTO>> AddAttendanceWithStudentAttendanceAsync(AddAttendanceDTO attendance);
 
      Task <GetAttendanceDTO?> GetAttendanceByIdAsync(int id);
   
-      Task UpdateAttendanceAsync(UpdateAttendanceDTO Attendance);
+      // Task UpdateAttendanceAsync(UpdateAttendanceDTO Attendance);
  
-      Task DeleteAttendanceAsync(DeleteAttendanceDTO Attendance);
+      // Task DeleteAttendanceAsync(DeleteAttendanceDTO Attendance);
 
     }
 } 

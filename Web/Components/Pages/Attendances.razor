@@ -36,7 +36,7 @@
             <Columns>
                 <SelectColumn T="GetAttendanceDTO" />
                 <PropertyColumn Property="x => x.Id" Title="Nr" Sortable="true" Filterable="false" />
-                <PropertyColumn Property="x => x.Name" />
+                <PropertyColumn Property="x => x.InstructorName" />
                 <PropertyColumn Property="x => x.Classs.Name" SortBy="@_sortBy" />
                 <PropertyColumn Property="x => x.Date" />
                  
@@ -93,9 +93,9 @@
         private Func<GetAttendanceDTO, object> _sortBy => x =>
         {
             if (_sortNameByLength)
-                return x.Name.Length;
+                return x.InstructorName.Length;
             else
-                return x.Name;
+                return x.InstructorName;
         };
         // quick filter - filter globally across multiple columns with the same input
         private Func<GetAttendanceDTO, bool> _quickFilter => x =>
@@ -103,7 +103,7 @@
             if (string.IsNullOrWhiteSpace(_searchString))
                 return true;
 
-            if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            if (x.InstructorName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
 
             if (x.ClasssId.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))

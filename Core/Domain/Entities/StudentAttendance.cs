@@ -9,7 +9,7 @@ namespace Domain.Entities
         public string Name{get;set;}
         public DateTime DateAdded{get;set;}
         public string UserAdded { get; set; }
-        public StudentAttendanceStatus Status{get;set;}
+        public AttendanceStatus Status{get;set;}
 
         
         public Attendance Attendance{get;set;}

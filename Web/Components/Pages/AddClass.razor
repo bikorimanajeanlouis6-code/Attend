@@ -108,7 +108,7 @@
     {
       try
       {
-         await ClassService.AddClassAsync(classs);
+        await ClassService.AddClassAsync(classs);
         MudDialog.Close(DialogResult.Ok(true));
         Snackbar.Add("Added Successfully", Severity.Success);
       }

@@ -23,19 +23,23 @@
                 Placeholder="Fullname">
                 </MudTextField>
             </MudItem>
-            <MudItem xs="6">
-                 <MudSelect
+           
+                <MudItem xs="6">
+                <MudSelect 
+                Label="Sex"
                 @bind-Value="student.Sex"
                 Margin="Margin.Dense"
                 Variant="Variant.Outlined"
+                AdornmentIcon="@Icons.Material.Filled.Transgender"
                 Placeholder="select sex">
-                
-                @foreach(var sex in Enum.GetValues(typeof(StudentSex))){
-                    <MudSelectItem Value="sex">@sex</MudSelectItem> 
+                @foreach (StudentSex sex in Enum.GetValues(typeof(StudentSex)) )
+                {
+                    <MudSelectItem Value="sex">@sex</MudSelectItem>
                 }
-            
-                </MudSelect> 
+
+                </MudSelect>
             </MudItem>
+
             <MudItem xs="6">
                 <MudTextField 
                 @bind-Value="student.Email"

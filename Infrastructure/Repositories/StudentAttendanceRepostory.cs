@@ -3,78 +3,90 @@ using Domain.Entities;
 using Application.Interfaces;
 using Infrastructure.Data;
 using Application.DTOs;
+using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories
-{
-    public class StudentAttendanceRepository : IStudentAttendance
+
+ {
+    public class StudentAttendanceRepository:IStudentAttendance
     {
-        private readonly ApplicationDbContext _dbcontext;
-        public StudentAttendanceRepository(ApplicationDbContext dbcontext)
+        private readonly ApplicationDbContext _context;
+        public StudentAttendanceRepository(ApplicationDbContext context)
         {
-            _dbcontext = dbcontext;
+            _context = context;
         }
-        public async Task<List<GetStudentAttendanceDTO>> GetAllStudentAttendanceAsync()
-        {
-            return await _dbcontext.StudentAttendances.Select(s => new GetStudentAttendanceDTO
-            {
-                Id = s.Id,
-                StudentId = s.StudentId,
-                AttendanceId = s.AttendanceId,
-                Datetime = s.DateAdded,
-                UserAdded = s.UserAdded
 
-            }).ToListAsync();
-        }
-        public async Task AddStudentAttendanceAsync(AddStudentAttendanceDTO studentAttendance)
+        public async Task<List<GetStudentAttendanceDTO>> GetAllStudentAttendancesAsync()
         {
-            _dbcontext.StudentAttendances.Add(new StudentAttendance
-            {
-               
-                StudentId = studentAttendance.StudentId,
-                AttendanceId = studentAttendance.AttendanceId,
-                UserAdded = "Admin",
-                DateAdded = DateTime.UtcNow
+            return await _context.StudentAttendances
+                .Include(sa => sa.Student)
+                .Include(sa => sa.Attendance)
+                .Select(sa => new GetStudentAttendanceDTO
+                {
+                    Id = sa.Id,
+                    Student = sa.Student,
+                    StudentId = sa.StudentId,
+                    Attendance = sa.Attendance,
+                    AttendanceId = sa.AttendanceId,
+                    Status = sa.Status,
+                    DateAdded = sa.DateAdded,
+                    UserAdded = sa.UserAdded
+                }).ToListAsync();
+        }     
 
-            });
-            await _dbcontext.SaveChangesAsync();
-        }
-        public async Task<GetStudentAttendanceDTO?> GetStudentAttendanceByIdAsync(int id)
+       
+          public async Task AddStudentAttendanceAsync(int AttendanceId, AttendanceStatus status)
         {
-            return await _dbcontext.StudentAttendances.Where(s => s.Id == id).Select(s => new GetStudentAttendanceDTO
+            var existing = await _context.StudentAttendances.FindAsync(AttendanceId);
+           if (existing == null)
             {
-                Id = s.Id,
-                StudentId = s.StudentId,
-                AttendanceId = s.AttendanceId,
-                DateAdded = s.DateAdded,
-                UserAdded = s.UserAdded
-
-            }).FirstOrDefaultAsync();
+                throw new InvalidOperationException("Student attendance record not found.");
+            }
+            existing.Status = status;
+            await _context.SaveChangesAsync();
         }
-        public async Task UpdateStudentAttendanceAsync(UpdateStudentAttendanceDTO studentAttendance)
-        {
-            var ExistingStudentAttendance = _dbcontext.StudentAttendances.FirstOrDefault(s => s.Id == studentAttendance.Id);
-            if (ExistingStudentAttendance != null)
-            {
         
-                ExistingStudentAttendance.StudentId = studentAttendance.StudentId;
-                ExistingStudentAttendance.AttendanceId = studentAttendance.AttendanceId;
 
-                await _dbcontext.SaveChangesAsync();
-            }
-        }
-        public async Task DeleteStudentAttendanceAsync(DeleteStudentAttendanceDTO student)
+
+
+
+        // public async Task UpdateStudentAttendanceAsync(int AttendanceId, int StudentId, StudentAttendanceStatus status)
+        // {
+        //     var existing = await _context.StudentAttendances.FindAsync(AttendanceId);
+        //    if (existing == null)
+        //     {
+        //         throw new InvalidOperationException("Student attendance record not found.");
+        //     }
+        //     existing.Status = status;
+        //     await _context.SaveChangesAsync();
+        // }
+
+        
+    
+    public async Task<GetStudentAttendanceDTO?> GetStudentAttendanceByIdAsync(int id)
         {
-            var ExistingStudentAttendance = _dbcontext.StudentAttendances.FirstOrDefault(s => s.Id == student.Id);
-            if (ExistingStudentAttendance != null)
+            var studentAttendance = await _context.StudentAttendances
+                .Include(sa => sa.Student)
+                .Include(sa => sa.Attendance)
+                .FirstOrDefaultAsync(sa => sa.Id == id);
+
+            if (studentAttendance == null)
             {
-                _dbcontext.StudentAttendances.Remove(ExistingStudentAttendance);
-                await _dbcontext.SaveChangesAsync();
+                return null;
             }
-        }
 
-        public Task<List<GetStudentAttendanceDTO>> GetAllStudentAttendancesAsync()
-        {
-            throw new NotImplementedException();
+            return new GetStudentAttendanceDTO
+            {
+                Id = studentAttendance.Id,
+                Student = studentAttendance.Student,
+                StudentId = studentAttendance.StudentId,
+                Attendance = studentAttendance.Attendance,
+                AttendanceId = studentAttendance.AttendanceId,
+                Status = studentAttendance.Status,
+                DateAdded = studentAttendance.DateAdded,
+                UserAdded = studentAttendance.UserAdded
+            };
         }
     }
+
 }

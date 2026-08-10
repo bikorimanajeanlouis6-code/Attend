@@ -6,6 +6,7 @@
 @using Application.Services.ClassServices
 @using Domain.ValueObjects
 @inject IClassService ClasssService
+
 @inject IStudentService StudentService
 
 <PageTitle>Dashboard</PageTitle>
@@ -34,17 +35,21 @@
                    />
             </MudItem>
            }
-           @foreach(var studentsex in StudentSexCounts){
+           @foreach( var StudentSexCounts in StudentSexCounts){
             <MudItem xs="12" sm="6" md="3">
                 <StatsCard
-                         Title="@($"{studentsex.Sex} Students")"
-                         Icon="@Icons.Material.Filled.Person"
-                         ValueColor="Color.Success"
-                         IconColor="Color.Success"
-                         TitleColor="Color.Primary" 
+                        Title="@($"{StudentSexCounts.Sex} Student")"
+                       Value="@StudentSexCounts.Count"
+                       Icon="@Icons.Material.Filled.Person"
+                       ValueColor="@GetValuesColor(StudentSexCounts.Sex)"
+                       IconColor="@GetValuesColor(StudentSexCounts.Sex)" 
+                       TitleColor="Color.Dark"
                          />
             </MudItem>
            }
+    </MudGrid>
+    <MudGrid>
+        
     </MudGrid>
 </MudContainer>
 
@@ -59,6 +64,7 @@
     
 
         students= await StudentService.GetAllStudentsAsync();
+
         classStatusCounts = await ClasssService.GetClassStatusCountAsync();
         StudentSexCounts = await StudentService.GetStudentSexCountsAsync();
 
@@ -73,6 +79,16 @@
             ClassStatus.Full => Color.Warning,
             ClassStatus.Ongoing => Color.Warning,
             _ => Color.Default
+        };
+    }
+      private Color GetValuesColor(StudentSex sex)
+    {
+        return sex switch
+        {
+            StudentSex.Male => Color.Primary,
+            StudentSex.Female => Color.Secondary,
+            _ => Color.Default
+           
         };
     }
 }

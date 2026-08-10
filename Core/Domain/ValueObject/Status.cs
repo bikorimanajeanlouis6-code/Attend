@@ -24,20 +24,23 @@ namespace Domain.ValueObjects
             Dropped,
             Repeated,
         }
-        public enum AttendanceStatus
+     public enum AttendanceStatus
     {
        Active,
+       Present,
+       Absent,
+       Late,
+       UnTaken,
+       Excused,
        Deleted, 
     }
     public enum StudentAttendanceStatus
     {
-         Suspended,
-         Repeated,
-         Promoted,
          Active,
          Deleted,
+         Status,
          Absent,
-         present,
+         Present,
     }
     public enum StudentSex
     {

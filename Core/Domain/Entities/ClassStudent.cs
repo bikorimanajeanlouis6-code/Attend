@@ -19,10 +19,6 @@ namespace Domain.Entities
           //Nagivation properties
         public Classs Classs{ get; set;}
         public Student Student{ get; set;}
-
-         
-
-          
-         
+        public int ClassId { get; set; }
     }
 }

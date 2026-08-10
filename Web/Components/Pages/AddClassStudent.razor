@@ -128,20 +128,19 @@
     
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; } = null!;
-    //This is the parameter which is bound by the one passed from Classes.razor when you click the add student menuitem to open registrationdialog
+  
     [Parameter]
     public GetClassDTO? selectedClass {get;set;}
 
     private readonly AddClassStudentDTO classStudent = new()
     {
-        //These to makes datetimepicker default date be today instead of being 0001/1/1
+        
         StartDate=DateTime.Today,
         EndDate=DateTime.Today,
     };
     private List<GetStudentDTO> students = new();
     private List<GetClassStudentDTO> classStudents = new();
-   // This is for us to get the Registration list(class members) of the selected class only
-    private List<GetClassStudentDTO> filteredclassStudents => classStudents.Where(r => selectedClass is null || r.ClasssId == selectedClass.Id)
+      private List<GetClassStudentDTO> filteredclassStudents => classStudents.Where(r => selectedClass is null || r.ClasssId == selectedClass.Id)
             .ToList();
      
     protected override async Task OnInitializedAsync()
@@ -149,7 +148,7 @@
         classStudents = await ClassStudentService.GetAllClassStudentsAsync();
         students = await StudentService.GetAllStudentsAsync();
 
-        //Add this to set the ClassId
+       
         if (selectedClass is not null)
         {
             classStudent.ClasssId = selectedClass.Id;
@@ -161,8 +160,7 @@
     {
         try
         {
-            await ClassStudentService.AddClassStudentAsync(classStudent);
-            //Add this to bind datagrid so that when you save new registration displays automatically 
+            await ClassStudentService.AddClassStudentAsync(classStudent); 
             classStudents = await ClassStudentService.GetAllClassStudentsAsync();
             Snackbar.Add("Student added successfully.", Severity.Success);
         }
@@ -184,10 +182,10 @@
     
     private async Task<IEnumerable<string>> Search(string value, CancellationToken token)
     {
-        // In real life use an asynchronous function for fetching data from an api.
+       
         await Task.Delay(5, token);
 
-        // if text is null or empty, show complete list
+       
         if (string.IsNullOrEmpty(value))
         {
             return students.Select(s => s.Name);
@@ -204,7 +202,7 @@
             ClassStudentStatus.Dropped => Color.Error,
             _ => Color.Default
         };
-        //For getting class status color(mudchip) color
+      
     private static Color GetStatusColor(ClassStatus status) => status switch
     {
         ClassStatus.Active => Color.Success,
