@@ -1,5 +1,4 @@
 ﻿@page "/"
-
 @using Application.DTOs
 @using Web.Components.SharedComps
 @using Application.Services.StudentServices
@@ -48,8 +47,23 @@
             </MudItem>
            }
     </MudGrid>
-    <MudGrid>
-        
+       <MudGrid>
+            <MudItem  xs="6" >
+            <MudCard>
+            <MudCardContent>
+                <MudText Typo="Typo.h6" >Students By Sex</MudText>
+                <MudChart  T="double"
+                          ChartType="ChartType.Bar"
+                          ChartOptions="_axisChartOptions"
+                          ChartSeries="@_series"
+                          ChartLabels="@_xAxisLabels"
+                          Width="100%px"
+                          Height="300px"
+                                         >
+                </MudChart>
+            </MudCardContent>
+        </MudCard>
+       </MudItem> 
     </MudGrid>
 </MudContainer>
 
@@ -67,6 +81,8 @@
 
         classStatusCounts = await ClasssService.GetClassStatusCountAsync();
         StudentSexCounts = await StudentService.GetStudentSexCountsAsync();
+
+        StudentBySexChart();
 
     }  
 
@@ -91,4 +107,37 @@
            
         };
     }
+
+         private List<ChartSeries<double>> _series = new();
+         private string[] _xAxisLabels = Array.Empty<string>();
+         private BarChartOptions _axisChartOptions = new BarChartOptions() 
+    {
+        XAxisTitle = "Sex",
+        YAxisTitle = "Students",
+        FixedBarWidth = 50,
+        ChartPalette = new string[] { "#1976D2", "#E91E63", "#4CAF50", "#FF9800", "#9C27B0" }
+
+    };
+
+     private void StudentBySexChart()
+    {
+        var studentsbysex = students
+
+        .GroupBy(g => g.Sex.ToString())
+
+        .Select(g => new {
+            Sex = g.Key,
+            Count =(double)g.Count()
+        }).ToList();
+
+         _series = studentsbysex.Select(g => new ChartSeries<double>
+            {
+                Name = g.Sex,
+                Data = new double[] { g.Count }
+            }).ToList();
+
+         _xAxisLabels= new string[] { "Sex" };    
+
+    }
+
 }
