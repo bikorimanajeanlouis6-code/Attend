@@ -36,16 +36,16 @@
             <EditForm Model="classStudent" OnValidSubmit="SaveClassStudentAsync">
                 <MudGrid Class="mb-3">
                     <MudItem xs="12">
-                        <MudAutocomplete T="string"
-                                         Label="Student"
-                                         Margin="Margin.Dense"
-                                         Dense="true"
-                                         Variant="Variant.Outlined"
-                                         Placeholder="Type to search student"
-                                         SearchFunc="Search"
-                                         Value="@GetStudentName(classStudent.StudentId)"
-                                         ValueChanged="OnStudentSelected"
-                                         ToStringFunc="@(s => s ?? string.Empty)" />
+                        <MudAutocomplete T="GetStudentDTO"
+                                             Label="Student"
+                                             Margin="Margin.Dense"
+                                             Dense="true"
+                                             Variant="Variant.Outlined"
+                                             Placeholder="Type to search student"
+                                             SearchFunc="Search"
+                                             Value="selectedStudentObj"
+                                             ValueChanged="OnStudentSelected"
+                                             ToStringFunc="@(s => s?.Name ?? string.Empty)" />
                     </MudItem>
                     <MudItem xs="12">
                         <MudDatePicker 
@@ -139,6 +139,7 @@
         EndDate=DateTime.Today,
     };
     private List<GetStudentDTO> students = new();
+    private GetStudentDTO? selectedStudentObj;
     private List<GetClassStudentDTO> classStudents = new();
       private List<GetClassStudentDTO> filteredclassStudents => classStudents.Where(r => selectedClass is null || r.ClasssId == selectedClass.Id)
             .ToList();
@@ -172,26 +173,28 @@
 
     private string GetStudentName(int studentId) => students.FirstOrDefault(s => s.Id == studentId)?.Name ?? string.Empty;
 
-    private Task OnStudentSelected(string? studentName)
+    private Task OnStudentSelected(GetStudentDTO? student)
     {
-        var selectedStudent = students.FirstOrDefault(s => s.Name == studentName);
-        classStudent.StudentId = selectedStudent?.Id ?? 0;
+        selectedStudentObj = student;
+        classStudent.StudentId = student?.Id ?? 0;
         return Task.CompletedTask;
     }
 
-    
-    private async Task<IEnumerable<string>> Search(string value, CancellationToken token)
+    private async Task<IEnumerable<GetStudentDTO>> Search(string value, CancellationToken token)
     {
-       
         await Task.Delay(5, token);
 
-       
+        IEnumerable<GetStudentDTO> result;
         if (string.IsNullOrEmpty(value))
         {
-            return students.Select(s => s.Name);
+            result = students;
+        }
+        else
+        {
+            result = students.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        return students.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(s => s.Name);
+        return result.GroupBy(s => s.Id).Select(g => g.First());
     }
     //For getting registration status color(mudchip) color
     private static Color GetStatusColor(ClassStudentStatus status) => status switch

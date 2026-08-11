@@ -34,7 +34,7 @@
                 Placeholder="select sex">
                 @foreach (StudentSex sex in Enum.GetValues(typeof(StudentSex)) )
                 {
-                    <MudSelectItem Value="sex">@sex</MudSelectItem>
+                    <MudSelectItem Value="@sex">@sex</MudSelectItem>
                 }
 
                 </MudSelect>

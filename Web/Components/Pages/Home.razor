@@ -4,9 +4,11 @@
 @using Application.Services.StudentServices
 @using Application.Services.ClassServices
 @using Domain.ValueObjects
-@inject IClassService ClasssService
+@using Application.Services.AttendanceServices
+@inject IClassService ClassService
 
 @inject IStudentService StudentService
+@inject IAttendanceService AttendanceService
 
 <PageTitle>Dashboard</PageTitle>
 
@@ -47,7 +49,7 @@
             </MudItem>
            }
     </MudGrid>
-       <MudGrid>
+       <MudGrid Class="mt-5">
             <MudItem  xs="6" >
             <MudCard>
             <MudCardContent>
@@ -57,36 +59,77 @@
                           ChartOptions="_axisChartOptions"
                           ChartSeries="@_series"
                           ChartLabels="@_xAxisLabels"
-                          Width="100%px"
+                          Width="100%"
                           Height="300px"
                                          >
                 </MudChart>
             </MudCardContent>
         </MudCard>
        </MudItem> 
+        <MudItem xs="6">
+            <MudCard>
+                <MudCardContent>
+                    <MudText Typo="Typo.h6" Class="mb-2">Attendances by Month</MudText>
+                    <MudChart T="double" 
+                              ChartType="ChartType.Line" 
+                              ChartSeries="@_attendanceSeries" 
+                              XAxisLabels="@_monthLabels" 
+                              ChartOptions="_attendancechartoptions"
+                              Width="100%" 
+                              Height="350px">
+                    </MudChart>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+         <MudItem xs="6">
+            <MudCard>
+                <MudCardContent>
+                    <MudText Typo="Typo.h6">Number of Class by Faculty</MudText>
+                    <MudChart T="double"
+                       ChartType="ChartType.Bar" 
+                       ChartOptions="_axissChartOptions"
+                       ChartSeries="@_series"
+                       ChartLabels="@_xAxisLabels"
+                       Width="100%" Height="300px">
+                    </MudChart>
+                </MudCardContent>
+            </MudCard>
+        </MudItem> 
     </MudGrid>
 </MudContainer>
 
-        @code{
+@code{
+
+    private List<GetAttendanceDTO> attendances = new();
     private List<GetStudentDTO> students = new();
+    private List<GetClassDTO> classes = new();    
     private List<GetClassStatusCountDTO> classStatusCounts = new();    
     private int totalStudents => students.Count;  
     private List<GetStudentSexCountDTO> StudentSexCounts = new ();
 
     protected override async Task OnInitializedAsync()
     {
-    
 
+        attendances = await AttendanceService.GetAllAttendanceAsync();
         students= await StudentService.GetAllStudentsAsync();
 
-        classStatusCounts = await ClasssService.GetClassStatusCountAsync();
+        classStatusCounts = await ClassService.GetClassStatusCountAsync();
         StudentSexCounts = await StudentService.GetStudentSexCountsAsync();
 
+        classes = await ClassService.GetAllClassesAsync();
+        
+
+        _attendancechartoptions.InterpolationOption=InterpolationOption.EndSlope;
+
+
         StudentBySexChart();
+        await BindAttendanceByMonthChart();
+
+          
 
     }  
 
-     private Color GetValueColor(ClassStatus status)
+    private Color GetValueColor(ClassStatus status)
     {
         return status switch
         {
@@ -97,20 +140,20 @@
             _ => Color.Default
         };
     }
-      private Color GetValuesColor(StudentSex sex)
+    private Color GetValuesColor(StudentSex sex)
     {
         return sex switch
         {
             StudentSex.Male => Color.Primary,
             StudentSex.Female => Color.Secondary,
             _ => Color.Default
-           
+
         };
     }
 
-         private List<ChartSeries<double>> _series = new();
-         private string[] _xAxisLabels = Array.Empty<string>();
-         private BarChartOptions _axisChartOptions = new BarChartOptions() 
+    private List<ChartSeries<double>> _series = new();
+    private string[] _xAxisLabels = Array.Empty<string>();
+    private BarChartOptions _axisChartOptions = new BarChartOptions() 
     {
         XAxisTitle = "Sex",
         YAxisTitle = "Students",
@@ -119,7 +162,7 @@
 
     };
 
-     private void StudentBySexChart()
+    private void StudentBySexChart()
     {
         var studentsbysex = students
 
@@ -130,14 +173,70 @@
             Count =(double)g.Count()
         }).ToList();
 
-         _series = studentsbysex.Select(g => new ChartSeries<double>
+        _series = studentsbysex.Select(g => new ChartSeries<double>
             {
                 Name = g.Sex,
                 Data = new double[] { g.Count }
             }).ToList();
 
-         _xAxisLabels= new string[] { "Sex" };    
+        _xAxisLabels= new string[] { "Sex" };    
+
+    }
+     private BarChartOptions _axissChartOptions = new BarChartOptions()
+    {
+        XAxisTitle = "Faculty",
+        YAxisTitle = "Classes",
+        FixedBarWidth = 50,
+        ChartPalette = new string[] { "#1976D2", "#E91E63", "#4CAF50", "#FF9800", "#9C27B0" }
+    };
+
+     private void ClassBySexChart()
+    {
+        var classesbyfaculty = classes
+        .GroupBy(s => s.Faculty.Name.ToString())
+        .Select(g => new
+        {
+            Faculty = g.Key,
+            Count = (double)g.Count()
+        }).ToList();
+        _series = classesbyfaculty.Select(g => new ChartSeries<double>
+        {
+            Name = g.Faculty,
+            Data = new double[] { g.Count }
+        }).ToList();
+
+        _xAxisLabels = new string[] { "Faculty" };
 
     }
 
+    private async Task BindAttendanceByMonthChart()
+    {
+        double[] monthlyCounts = new double[12];
+        foreach (var attendance in attendances)
+        {
+            if (attendance.Date != default)
+            {
+                int monthIndex = attendance.Date.Month - 1;
+                if (monthIndex >= 0 && monthIndex < 12)
+                {
+                    monthlyCounts[monthIndex]++;
+                }
+            }
+        }
+
+        _attendanceSeries = new List<ChartSeries<double>>
+        {
+            new ChartSeries<double>
+            {
+                Name = "Attendances",
+                Data = monthlyCounts
+            }
+        };
+        }
+         private string[] _monthLabels = new string[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+         private List<ChartSeries<double>> _attendanceSeries = new();
+        private LineChartOptions _attendancechartoptions= new();
+         
+    } 
 }
+         
