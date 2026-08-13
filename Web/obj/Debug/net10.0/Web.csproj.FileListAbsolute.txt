@@ -276,3 +276,7 @@ C:\Users\hp\source\repos\Attend\web\obj\Debug\net10.0\refint\Web.dll
 C:\Users\hp\source\repos\Attend\web\obj\Debug\net10.0\Web.pdb
 C:\Users\hp\source\repos\Attend\web\obj\Debug\net10.0\Web.genruntimeconfig.cache
 C:\Users\hp\source\repos\Attend\web\obj\Debug\net10.0\ref\Web.dll
+C:\Users\hp\source\repos\Attend\web\bin\Debug\net10.0\Microsoft.AspNet.Identity.Core.dll
+C:\Users\hp\source\repos\Attend\web\bin\Debug\net10.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\hp\source\repos\Attend\web\bin\Debug\net10.0\Microsoft.AspNetCore.Identity.UI.dll
+C:\Users\hp\source\repos\Attend\web\obj\Debug\net10.0\Web.MvcApplicationPartsAssemblyInfo.cs

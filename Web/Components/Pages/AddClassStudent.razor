@@ -1,3 +1,4 @@
+
 @using Application.Services.StudentServices
 @using Application.Services.ClassServices
 @using Application.DTOs
@@ -43,8 +44,8 @@
                                              Variant="Variant.Outlined"
                                              Placeholder="Type to search student"
                                              SearchFunc="Search"
-                                             Value="selectedStudentObj"
-                                             ValueChanged="OnStudentSelected"
+                                             Value="@selectedStudentObj"
+                                             ValueChanged="@OnStudentSelected"
                                              ToStringFunc="@(s => s?.Name ?? string.Empty)" />
                     </MudItem>
                     <MudItem xs="12">

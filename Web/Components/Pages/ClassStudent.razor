@@ -1,13 +1,15 @@
-@* @page "/Class_Student"
+@page "/Class_Student"
 @using Application.Services.ClassStudentServices
 @using Application.DTOs;
-@using Domain.Entities;
+@using Domain.ValueObjects
+
+
 
 @inject IDialogService DialogService
-@inject IClassStudentService ClassStudentService *@
+@inject IClassStudentService ClassStudentService 
 
 
- @* <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4" >
+  <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4" >
         <MudDataGrid T="GetClassStudentDTO" MultiSelection="true" Items="@classstudents" SortMode="SortMode.Multiple" Filterable="true" 
             Hideable="true" RowClick="@RowClicked" RowContextMenuClick="RowRightClicked" SelectedItemsChanged="@SelectedItemsChanged">
             
@@ -33,10 +35,10 @@
 
             <Columns>
                 <SelectColumn T="GetClassStudentDTO" />
-                <PropertyColumn Property="x => x.Id" Title="Nr" Sortable="true" Filterable="false" /> 
+                <PropertyColumn Property="x => x.Id" Title="ID" Sortable="true" Filterable="false" /> 
                 <PropertyColumn Property="x => x.Classs" Title="Class" />
                 <PropertyColumn Property="x => x.Student.Name" Title="Student" />
-                <PropertyColumn Property="ax => x.UserAdded" Title="User Added" />
+                <PropertyColumn Property="x => x.UserAdded" Title="User Added" />
                 <PropertyColumn Property="x => x.DateAdded" Title="Date Added" />
                 <PropertyColumn Property="x => x.Status" Title="Status" />
             </Columns>
@@ -45,13 +47,21 @@
             </PagerContent>
 
         </MudDataGrid>
-</MudContainer> *@
+</MudContainer> 
 
-@* @code{
+@code{
 
       private string _searchString;
         private bool _sortNameByLength;
         private List<string> _events = new();
+
+       private static Color GetStatusColor(ClassStudentStatus status) => status switch
+        {
+            ClassStudentStatus.Active => Color.Success,
+            ClassStudentStatus.Deleted => Color.Error,
+            _ => Color.Default
+        };
+
 
         void RowClicked(DataGridRowClickEventArgs<GetClassStudentDTO> args)
         {
@@ -71,7 +81,7 @@
     private List<GetClassStudentDTO> classstudents= new ();
     protected override async Task OnInitializedAsync()
     {
-        classstudents = await ClassStudentService.GetAllClassStudentAsync();
+        classstudents = await ClassStudentService.GetAllClassStudentsAsync();
     }
     private readonly DialogOptions _closeButton = new() { CloseButton = true };
         private async Task OpenDialogAsync(DialogOptions options)
@@ -82,36 +92,36 @@
 
             if (result is not null && !result.Canceled)
             {
-                classstudents = await ClassStudentService.GetAllClassStudentAsync();
+                classstudents = await ClassStudentService.GetAllClassStudentsAsync();
             }
         }
          private async Task ViewClassStudentAsync(GetClassStudentDTO clssstudent, DialogOptions options)
             {
                 var parameters = new DialogParameters
                 {
-                    { nameof(ClassStudentDitails.Id), clssstudent.Id } // Pass the Id directly
+                    { nameof(GetClassStudentDTO.Id), clssstudent.Id } // Pass the Id directly
                 };
 
-                var dialog = await DialogService.ShowAsync<ClassStudentDitails>("Class_Student Details", parameters, options);
+                var dialog = await DialogService.ShowAsync<ClassStudent>("Class_Student Details", parameters, options);
             }
 
             private async Task EditClassStudentAsync(GetClassStudentDTO clssstudent, DialogOptions options)
             {
                 var parameters = new DialogParameters
                 {
-                    { nameof(ClassStudentEdit.Id), clssstudent.Id } // Pass the Id directly
+                    { nameof(clssstudent.Id), clssstudent.Id } // Pass the Id directly
                 };
 
-                var dialog = await DialogService.ShowAsync<ClassStudentEdit>("Edit Class_Student", parameters, options);
+                var dialog = await DialogService.ShowAsync<ClassStudent>("Edit Class_Student", parameters, options);
                 
                 var result = await dialog.Result;
 
                 if (result is not null && !result.Canceled)
                 {
-                    classstudents = await ClassStudentService.GetClassStudentsAsync();
+                    classstudents = await ClassStudentService.GetAllClassStudentsAsync();
                     StateHasChanged();
                 }
             }
             
        }
-             *@
+             

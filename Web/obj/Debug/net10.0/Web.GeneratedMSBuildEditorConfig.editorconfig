@@ -58,6 +58,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBZGRTdHVkZW50QXR0ZW5kYW5jZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/hp/source/repos/Attend/web/Components/Pages/AddUser.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBZGRVc2VyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/hp/source/repos/Attend/web/Components/Pages/AttendanceDetailDialog.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBdHRlbmRhbmNlRGV0YWlsRGlhbG9nLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
@@ -132,6 +136,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/hp/source/repos/Attend/web/Components/Pages/UpdateStudent.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVcGRhdGVTdHVkZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/hp/source/repos/Attend/web/Components/Pages/User.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2VyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/hp/source/repos/Attend/web/Components/Pages/Weather.razor]

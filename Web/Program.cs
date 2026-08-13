@@ -36,6 +36,18 @@ if (!app.Environment.IsDevelopment())
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
 
+// Security headers
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+    context.Response.Headers["Referrer-Policy"] = "no-referrer-when-downgrade";
+    context.Response.Headers["Permissions-Policy"] = "geolocation=(), microphone=()";
+    // Content-Security-Policy: adjust sources as needed for your app (inline scripts/styles blocked)
+    context.Response.Headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https:; connect-src 'self' https:;";
+    await next.Invoke();
+});
+
 app.UseAntiforgery();
 
 app.MapStaticAssets();

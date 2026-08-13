@@ -1,18 +1,21 @@
+@using Application.DTOs
 @using Application.Services.AttendanceServices
 @using Application.Services.ClassServices
-@using Application.DTOs
-@using Domain.ValueObjects
 @using Application.Services.StudentAttendanceServices
+@using Application.Services.StudentServices
+@using Domain.Entities
+@using Domain.ValueObjects
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 @inject IAttendanceService AttendanceService
 @inject IClassService ClassService
+@inject IStudentService StudentService
 @inject IDialogService DialogService
 @inject IStudentAttendanceService StudentAttendanceService
 @inject ISnackbar Snackbar
 
 
-<MudDialog MaxWidth="MaxWidth.ExtraExtraLarge" FullWidth="true">
+<MudDialog MaxWidth="MaxWidth.Medium" FullWidth="true">
     <TitleContent>
         <MudText Typo="Typo.h6">Take Attendance</MudText>
     </TitleContent>
@@ -111,7 +114,13 @@
 
 @code {
     private List<GetStudentAttendanceDTO> studentAttendances = new();
-    private AddAttendanceDTO attendance = new();
+    
+     private List<GetStudentDTO> Students = new List<GetStudentDTO>();
+     private List<GetClassDTO> classs =new List<GetClassDTO>();    
+    private AddAttendanceDTO attendance = new()
+    {
+        Date = DateTime.Today,
+    };
 
     private List<GetClassDTO> Classs = new();
     private GetClassDTO? selectedClass;
@@ -131,6 +140,8 @@
     protected async override Task OnInitializedAsync()
     {
         Classs = await ClassService.GetAllClassesAsync();
+        Students = await StudentService.GetAllStudentsAsync();
+        studentAttendances = await StudentAttendanceService.GetAllStudentAttendancesAsync();
     }
 
     private static Color GetStatusColor(AttendanceStatus status) => status switch

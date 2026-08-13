@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Application.Interfaces;
+using Infrastructure.Identity;
 using Infrastructure.Repositories;
 
 namespace Infrastructure.DependancyInjection
@@ -15,7 +16,7 @@ namespace Infrastructure.DependancyInjection
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("ATTENDCON"))
             );
-
+            services.AddAuthenticationService(configuration);
             services.AddScoped<IStudent, StudentRepository>();
             services.AddScoped<IAttendance, AttendanceRepository>();
             services.AddScoped<IClass, ClassRepository>();
@@ -23,6 +24,7 @@ namespace Infrastructure.DependancyInjection
             services.AddScoped<IClassStudent, ClassStudentRepository>();
             services.AddScoped<IFaculty, FacultyRepository>();
             services.AddScoped<IStudentAttendance, StudentAttendanceRepository>();
+            services.AddScoped<IIdentity, IdentityRepository>();
             return services;
         }
     }

@@ -50,8 +50,8 @@
             <Columns>
                 <SelectColumn T="GetClassDTO" />
                 <PropertyColumn Property="x => x.Id" Title="Nr" Sortable="true" Filterable="false" />
-                <PropertyColumn Property="x => x.Name" />
-                <PropertyColumn Property="x => x.EducationLevel.Name" SortBy="@_sortBy" />
+                <PropertyColumn Property="x => x.Name" SortBy="@_sortBy" />
+                <PropertyColumn Property="x => x.EducationLevel.Name" />
                 <PropertyColumn Property="x => x.Faculty.Name" />
                  <TemplateColumn Title="Status">
                     <CellTemplate>
@@ -88,7 +88,7 @@
 {
    
    private string _searchString = string.Empty;
-        private bool _sortNameByLength;
+        private bool _sortNameByLength = false;
         private List<string> _events = new();
        
         private List<Faculty> faculties = new();

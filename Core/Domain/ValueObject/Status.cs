@@ -19,6 +19,7 @@ namespace Domain.ValueObjects
         public enum ClassStudentStatus
         {
             Active,
+            Deleted,
             Promoted,
             Suspended,
             Dropped,
@@ -46,5 +47,11 @@ namespace Domain.ValueObjects
     {
         Male,
         Female,
+    }
+    public enum UserStatus
+    {
+        Active,
+        Deleted,
+        
     }
 }

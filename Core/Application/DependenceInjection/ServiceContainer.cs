@@ -7,6 +7,7 @@ using Application.Services.ClassStudentServices;
 using Application.Services.FacultyServices;
 using Application.Services.StudentAttendanceServices;
 using Domain.Entities;
+using Application.Services.IdentityServices;
 
 
 namespace Application.DependenceInjection
@@ -22,6 +23,7 @@ namespace Application.DependenceInjection
              services.AddScoped<IClassStudentService, ClassStudentService>();
              services.AddScoped<IFacultyService, FacultyService>();
              services.AddScoped<IStudentAttendanceService, StudentAttendanceService>();
+             services.AddScoped<IIdentityService, IdentityService>();
             return services;
         }
 

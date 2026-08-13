@@ -37,8 +37,8 @@
             <Columns>
                 <SelectColumn T="GetStudentDTO" />
                 <PropertyColumn Property="x => x.Id" Title="ID" Sortable="true" Filterable="false" />
-                <PropertyColumn Property="x => x.Name" />
-                <PropertyColumn Property="x => x.Sex" SortBy="@_sortBy" />
+                <PropertyColumn Property="x => x.Name" SortBy="@_sortBy" />
+                <PropertyColumn Property="x => x.Sex" />
                 <PropertyColumn Property="x => x.DateofBirth" Title="DateofBirth" />
                 <PropertyColumn Property="x => x.Phone" Title="Phone" />
                 <PropertyColumn Property="x => x.Email" Title="Email" />
@@ -73,8 +73,8 @@
 @code
 {
     
-        private string _searchString;
-        private bool _sortNameByLength;
+        private string _searchString = string.Empty;
+        private bool _sortNameByLength = false;
         private List<string> _events = new();
         private static Color GetStatusColor(StudentStatus status) => status switch
         {
