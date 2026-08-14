@@ -1,6 +1,11 @@
 @page "/students/delete/{id:int}"
 @using Domain.Entities
 @using Application.Services.StudentServices
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+
 @rendermode InteractiveServer
 @using Application.DTOs
 @inject NavigationManager Navigation

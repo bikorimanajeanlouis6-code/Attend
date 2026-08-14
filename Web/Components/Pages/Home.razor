@@ -5,6 +5,10 @@
 @using Application.Services.ClassServices
 @using Domain.ValueObjects
 @using Application.Services.AttendanceServices
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
 @inject IClassService ClassService
 
 @inject IStudentService StudentService

@@ -1,6 +1,10 @@
 @page "/classes/update/{id:int}"
 @using Application.Services.ClassServices
 @rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
 @using Application.DTOs
 @inject NavigationManager Navigation
 @inject IClassService ClassService

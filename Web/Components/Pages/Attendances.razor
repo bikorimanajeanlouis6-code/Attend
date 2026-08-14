@@ -1,6 +1,10 @@
 @page "/Attendance"
 @using Application.Services.AttendanceServices
 @using Application.DTOs
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
 @rendermode InteractiveServer       
 @inject NavigationManager Navigation
 @using Domain.ValueObjects

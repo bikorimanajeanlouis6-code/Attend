@@ -6,6 +6,11 @@
 @using Application.Services.EducationLevelServices
 @using Domain.Entities
 @using Domain.ValueObjects
+
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
 @inject NavigationManager Navigation
 @inject IDialogService DialogService
 @inject IClassService ClassService

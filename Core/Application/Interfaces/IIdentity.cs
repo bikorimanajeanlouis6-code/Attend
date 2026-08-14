@@ -5,5 +5,9 @@ namespace Application.Interfaces
     {
         Task AddUserAsync(AddUserDTO register);
         Task<List<GetUserDTO>> GetAllUsersAsync();
+
+        Task<bool>LoginAsync(LoginDTO login);
+        Task LogoutAsync();
+
     }
 }

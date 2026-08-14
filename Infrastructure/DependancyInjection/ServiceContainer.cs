@@ -16,6 +16,15 @@ namespace Infrastructure.DependancyInjection
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("ATTENDCON"))
             );
+
+            
+            // Provide IHttpContextAccessor for UserContext and register IUserContext implementation
+            services.AddHttpContextAccessor();
+            services.AddScoped<IUserContext, UserContext>();
+          
+
+
+
             services.AddAuthenticationService(configuration);
             services.AddScoped<IStudent, StudentRepository>();
             services.AddScoped<IAttendance, AttendanceRepository>();

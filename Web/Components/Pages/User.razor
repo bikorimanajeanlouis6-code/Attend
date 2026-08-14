@@ -1,6 +1,11 @@
 @using Application.DTOs
 @using Application.Services.IdentityServices
 @using Infrastructure.Migrations
+
+@* 
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize] *@
+
 @inject NavigationManager Navigation
 @inject IDialogService DialogService
 @using Domain.ValueObjects

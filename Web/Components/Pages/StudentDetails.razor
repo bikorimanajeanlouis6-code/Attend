@@ -1,6 +1,11 @@
 @page "/students/{id:int}"
 @using Application.DTOs
 @rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+
 @using Application.Services.StudentServices
 @inject NavigationManager Navigation
 @inject IStudentService StudentService

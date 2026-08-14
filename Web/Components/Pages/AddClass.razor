@@ -4,6 +4,10 @@
 @using Application.Services.EducationLevelServices
 @using Application.Services.FacultyServices
 
+@using Microsoft.AspNetCore.Authorization 
+@attribute [Authorize]
+
+
 @rendermode InteractiveServer
 @inject NavigationManager navigation
 @inject IClassService ClassService
@@ -118,5 +122,5 @@
         Snackbar.Add(ex.Message ,Severity.Error);
       }
     }
-   
+    
 }

@@ -2,9 +2,14 @@
 
 @using Application.Services.StudentServices
 @using Application.DTOs
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
 @inject NavigationManager Navigation
 @inject IDialogService DialogService
 @using Domain.ValueObjects
+
 @inject IStudentService StudentService
 
 

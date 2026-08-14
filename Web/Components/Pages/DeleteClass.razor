@@ -3,6 +3,10 @@
 @using Application.Services.ClassServices
 @rendermode InteractiveServer
 @using Application.DTOs
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
 @inject NavigationManager Navigation
 @inject IClassService ClassService
 <div>

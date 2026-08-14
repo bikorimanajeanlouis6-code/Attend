@@ -5,6 +5,10 @@
 @using Application.Services.StudentServices
 @using Domain.Entities
 @using Domain.ValueObjects
+
+@using Microsoft.AspNetCore.Authorization 
+@attribute [Authorize]
+
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 @inject IAttendanceService AttendanceService
@@ -86,7 +90,7 @@
                                     HeaderStyle="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
                                     CellStyle="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" />
                     <TemplateColumn Title="Actions" HeaderStyle="white-space:nowrap" ItemStyle="white-space:nowrap">
-                        <CellTemplate>
+                         <CellTemplate>
                             <MudMenu Icon="@Icons.Material.Filled.MoreVert" AriaLabel="Open menu">
                                 <MudMenuItem Icon="@Icons.Material.Filled.Add"
                                              OnClick="@(() => OnPresent(context.Item))">Present</MudMenuItem>

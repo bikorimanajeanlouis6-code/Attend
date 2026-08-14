@@ -16,10 +16,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+   
+
 //register Service
  builder.Services.AddInfrastructureService(builder.Configuration);
  builder.Services.AddApplicationServices();
  builder.Services.AddMudServices();
+
+ builder.Services.AddControllers();
+
 var app = builder.Build();
 
 
@@ -49,6 +54,12 @@ app.Use(async (context, next) =>
 });
 
 app.UseAntiforgery();
+
+app.UseAuthentication(); 
+app.UseAuthorization();
+
+app.MapControllers(); // Account login/logout endpoints
+
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
